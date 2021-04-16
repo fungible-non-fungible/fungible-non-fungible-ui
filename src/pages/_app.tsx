@@ -64,13 +64,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         {/* Fonts */}
         <link
           rel="preload"
-          href="/fonts/Inter/Inter-Regular.ttf"
+          href="/fonts/Scandia/Scandia-Regular.ttf"
           as="font"
           crossOrigin=""
         />
         <link
           rel="preload"
-          href="/fonts/Inter/Inter-Bold.ttf"
+          href="/fonts/Scandia/Scandia-Bold.ttf"
           as="font"
           crossOrigin=""
         />
