@@ -8,6 +8,7 @@ import { BaseLayout } from '@layouts/BaseLayout';
 import { Container } from '@components/ui/Container';
 import { Row } from '@components/ui/Row';
 import { Button } from '@components/ui/Button';
+import { Tag } from '@components/ui/Tag';
 
 import s from '../styles/UiKit.module.sass';
 
@@ -78,6 +79,11 @@ const Home: React.FC = () => {
               <Button className={s.button} theme="green" disabled>Green</Button>
               <Button className={s.button} theme="blue" disabled>Blue</Button>
             </div>
+          </div>
+          <div className={s.block}>
+            <h2 className={s.header}>Tags</h2>
+            <Tag className={s.button}>12 items</Tag>
+            <Tag className={s.button} theme="orange">129 items</Tag>
           </div>
         </Row>
       </Container>
