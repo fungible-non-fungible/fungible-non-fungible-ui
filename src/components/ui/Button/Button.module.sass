@@ -1,0 +1,53 @@
+@import "@styles/variables"
+@import "@styles/breakpoints"
+
+.root
+  box-shadow: none
+  border: none
+  background-color: transparent
+  outline: none
+  cursor: pointer
+  padding: 11px 20px 9px
+  text-align: center
+  font-size: 1rem
+  line-height: 1.22
+  font-family: $font
+  font-weight: bold
+  text-overflow: ellipsis
+  overflow: hidden
+  white-space: nowrap
+  transition: box-shadow $animationTime
+  min-width: 120px
+  border-radius: 20px
+  &:hover
+    box-shadow: none
+  &:disabled
+    cursor: not-allowed
+
+.purple
+  background: $gradient-purple
+  color: $light
+  box-shadow: 0 5px 15px rgba(#7445F0, 0.4)
+
+.pink
+  background: $gradient-pink-2
+  color: $primary-100
+  box-shadow: 0 5px 15px rgba(#E96FCF, 0.4)
+
+.green
+  background: $gradient-green
+  color: $primary-100
+  box-shadow: 0 5px 15px rgba(#63C58F, 0.4)
+
+.blue
+  background: $gradient-blue
+  color: $primary-100
+  box-shadow: 0 5px 15px rgba(#80CDDF, 0.4)
+
+.disabled
+  box-shadow: none
+  opacity: .7
+
+.small
+  padding: 7px 17px
+  font-size: 0.875rem

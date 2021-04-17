@@ -5,8 +5,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { NextSeo } from 'next-seo';
 
 import { BaseLayout } from '@layouts/BaseLayout';
-import { Row } from '@components/ui/Row';
 import { Container } from '@components/ui/Container';
+import { Row } from '@components/ui/Row';
+import { Button } from '@components/ui/Button';
 
 import s from '../styles/UiKit.module.sass';
 
@@ -52,6 +53,30 @@ const Home: React.FC = () => {
                 <div className={cx(s.color, s.gradientPink)} />
                 <div className={cx(s.color, s.gradientPink2)} />
               </div>
+            </div>
+          </div>
+          <div className={s.block}>
+            <h2 className={s.header}>Buttons</h2>
+            <div className={s.buttonsRow}>
+              <h3 className={s.buttonsHeader}>Medium</h3>
+              <Button className={s.button}>Purple</Button>
+              <Button className={s.button} theme="pink">Pink</Button>
+              <Button className={s.button} theme="green">Green</Button>
+              <Button className={s.button} theme="blue">Blue</Button>
+            </div>
+            <div className={s.buttonsRow}>
+              <h3 className={s.buttonsHeader}>Small</h3>
+              <Button className={s.button} sizeT="small">Purple</Button>
+              <Button className={s.button} sizeT="small" theme="pink">Pink</Button>
+              <Button className={s.button} sizeT="small" theme="green">Green</Button>
+              <Button className={s.button} sizeT="small" theme="blue">Blue</Button>
+            </div>
+            <div className={s.buttonsRow}>
+              <h3 className={s.buttonsHeader}>Disabled</h3>
+              <Button className={s.button} disabled>Purple</Button>
+              <Button className={s.button} theme="pink" disabled>Pink</Button>
+              <Button className={s.button} theme="green" disabled>Green</Button>
+              <Button className={s.button} theme="blue" disabled>Blue</Button>
             </div>
           </div>
         </Row>
