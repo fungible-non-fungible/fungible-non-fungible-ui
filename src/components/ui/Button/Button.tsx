@@ -77,6 +77,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <motion.button
+      // @ts-ignore
       type={type}
       {...(props as React.HTMLProps<HTMLButtonElement>)}
       className={compoundClassName}
