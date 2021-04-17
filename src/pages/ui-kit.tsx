@@ -10,6 +10,7 @@ import { Row } from '@components/ui/Row';
 import { Button } from '@components/ui/Button';
 import { Tag } from '@components/ui/Tag';
 
+import { Heading } from '@components/ui/Heading';
 import s from '../styles/UiKit.module.sass';
 
 const Home: React.FC = () => {
@@ -29,7 +30,7 @@ const Home: React.FC = () => {
         <Row className={s.row}>
           <h1>UI Kit</h1>
           <div className={s.block}>
-            <h2 className={s.header}>Colors</h2>
+            <Heading title="Colors" items={11} />
             <div className={s.colors}>
               <div className={s.colorsColumn}>
                 <p className={s.colorsHeader}>Primary</p>
@@ -57,7 +58,13 @@ const Home: React.FC = () => {
             </div>
           </div>
           <div className={s.block}>
-            <h2 className={s.header}>Buttons</h2>
+            <Heading theme="orange" title="Headings" items={3} />
+            <Heading className={s.headingItem} title="Purple" items={2} />
+            <Heading className={s.headingItem} theme="orange" title="Orange" items={148} />
+            <Heading className={s.headingItem} title="No tag" />
+          </div>
+          <div className={s.block}>
+            <Heading theme="orange" title="Buttons" items={8} />
             <div className={s.buttonsRow}>
               <h3 className={s.buttonsHeader}>Medium</h3>
               <Button className={s.button}>Purple</Button>
@@ -81,7 +88,7 @@ const Home: React.FC = () => {
             </div>
           </div>
           <div className={s.block}>
-            <h2 className={s.header}>Tags</h2>
+            <Heading title="Tags" items={2} />
             <Tag className={s.button}>12 items</Tag>
             <Tag className={s.button} theme="orange">129 items</Tag>
           </div>
