@@ -9,9 +9,11 @@ import { Container } from '@components/ui/Container';
 import { Row } from '@components/ui/Row';
 import { Button } from '@components/ui/Button';
 import { Tag } from '@components/ui/Tag';
-
 import { Heading } from '@components/ui/Heading';
+import { NftCard } from '@components/common/NftCard';
+
 import s from '../styles/UiKit.module.sass';
+import { nftsArray } from '../content/nfts';
 
 const Home: React.FC = () => {
   const { t } = useTranslation(['common', 'home']);
@@ -91,6 +93,24 @@ const Home: React.FC = () => {
             <Heading title="Tags" items={2} />
             <Tag className={s.button}>12 items</Tag>
             <Tag className={s.button} theme="orange">129 items</Tag>
+          </div>
+          <div className={s.block}>
+            <Heading title="Cards" />
+            <div className={s.cards}>
+              {nftsArray.map((nft) => (
+                <NftCard
+                  key={nft.slug}
+                  slug={nft.slug}
+                  title={nft.title}
+                  description={nft.description}
+                  image={nft.image}
+                  author={nft.author}
+                  holders={nft.holders}
+                  burnPercent={nft.burnPercent}
+                  price={nft.price}
+                />
+              ))}
+            </div>
           </div>
         </Row>
       </Container>
