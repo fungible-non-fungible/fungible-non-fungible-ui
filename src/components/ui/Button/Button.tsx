@@ -23,6 +23,7 @@ const themeClass = {
   pink: s.pink,
   green: s.green,
   blue: s.blue,
+  clean: s.clean,
 };
 
 const sizeClass = {
