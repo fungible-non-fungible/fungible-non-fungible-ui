@@ -1,0 +1,82 @@
+@import "@styles/variables"
+@import "@styles/breakpoints"
+
+.root
+  padding: 20px 20px 30px
+  background-color: $primary-80
+  border-radius: 30px
+  flex-grow: 1
+  display: flex
+  flex-direction: column
+  position: relative
+
+.link
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  z-index: 2
+
+.imageWrapper
+  border-radius: 20px
+  z-index: 1
+  overflow: hidden
+  position: relative
+  display: flex
+  height: 250px
+  &::before
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    content: ''
+    background: linear-gradient(180deg, rgba(28, 31, 57, 0) 60.81%, rgba(28, 31, 57, 0.95) 100%)
+  > img
+    object-fit: cover
+    width: 100%
+    height: 100%
+
+.author
+  position: absolute
+  bottom: 0
+  left: 0
+  width: 100%
+  padding: 17px 16px
+
+.title
+  margin-top: 20px
+  margin-bottom: 10px
+
+.holders
+  margin-top: auto
+  padding-top: 54px
+
+.bottom
+  padding-top: 40px
+  display: flex
+  width: 100%
+  justify-content: space-between
+  align-items: center
+  position: relative
+  &::after
+    content: ''
+    position: absolute
+    top: 20px
+    left: 0
+    width: 100%
+    height: 1px
+    background: $gradient-green
+
+.price
+  font-size: 1.125rem
+  font-weight: bold
+  color: #63C58F
+  background: $gradient-green
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+
+.button
+  position: relative
+  z-index: 3
