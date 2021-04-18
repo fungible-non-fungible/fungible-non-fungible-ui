@@ -16,18 +16,24 @@ import { Button } from '@components/ui/Button';
 import { Tag } from '@components/ui/Tag';
 import { Switcher } from '@components/ui/Switcher';
 import { Slider } from '@components/ui/Slider';
+import { Tabs } from '@components/ui/Tabs';
 import { NftCard } from '@components/common/NftCard';
 
 import s from '../styles/UiKit.module.sass';
 import { nftsArray } from '../content/nfts';
 
 const exampleTotalSupply = 10000;
+const tabs = [
+  'Create & Tokenize',
+  'Tokenize',
+];
 
 const Home: React.FC = () => {
   const { t } = useTranslation(['common', 'home']);
 
   const [switcherState, setSwitcherState] = useState(false);
   const [sliderValue, setSliderValue] = useState(50);
+  const [selectedTab, setSelectedTab] = useState(tabs[0]);
 
   return (
     <BaseLayout>
@@ -141,6 +147,36 @@ const Home: React.FC = () => {
               inputValue={sliderValue}
               className={s.slider}
               onDragEnd={(value) => setSliderValue(value)}
+            />
+          </div>
+          <div className={s.block}>
+            <Heading title="Tabs" theme="orange" />
+            <Tabs
+              className={s.tabs}
+              tabs={tabs}
+              selectedTab={selectedTab}
+              onChangeTab={(tab) => setSelectedTab(tab)}
+            />
+            <Tabs
+              className={s.tabs}
+              theme="pink"
+              tabs={tabs}
+              selectedTab={selectedTab}
+              onChangeTab={(tab) => setSelectedTab(tab)}
+            />
+            <Tabs
+              className={s.tabs}
+              theme="green"
+              tabs={tabs}
+              selectedTab={selectedTab}
+              onChangeTab={(tab) => setSelectedTab(tab)}
+            />
+            <Tabs
+              className={s.tabs}
+              theme="blue"
+              tabs={tabs}
+              selectedTab={selectedTab}
+              onChangeTab={(tab) => setSelectedTab(tab)}
             />
           </div>
           <div className={s.block}>
