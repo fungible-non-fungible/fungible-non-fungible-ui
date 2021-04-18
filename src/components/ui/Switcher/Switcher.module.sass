@@ -1,0 +1,37 @@
+@import "@styles/variables"
+@import "@styles/breakpoints"
+
+.root
+  width: 56px
+  height: 30px
+  background-color: $primary-60
+  display: flex
+  justify-content: flex-start
+  border-radius: 50px
+  padding: 4px
+  cursor: pointer
+  position: relative
+  &::after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    border-radius: 50px
+    background: $gradient-pink
+    opacity: 0
+    transition: opacity $animationTime
+
+.active
+  justify-content: flex-end
+  &::after
+    opacity: 1
+
+.handle
+  width: 22px
+  height: 22px
+  background: $gradient-blue
+  border-radius: 40px
+  position: relative
+  z-index: 1
