@@ -1,0 +1,33 @@
+@import "@styles/variables"
+@import "@styles/breakpoints"
+
+.root
+  height: 6px
+  position: relative
+  border-radius: 5px
+  margin: 7px 0
+
+.pointer
+  width: 20px
+  height: 20px
+  border-radius: 50%
+  background: $gradient-blue
+  top: calc(-50% - 5px)
+  position: absolute
+  cursor: pointer
+  //&:hover
+  //  .percent
+  //    opacity: 1
+  //    transform: translate(-50%, 0) scale(1)
+
+.percent
+  position: absolute
+  top: calc(100% + 10px)
+  font-size: 12px
+  font-weight: bold
+  left: 50%
+  //transform: translate(-50%, -75%) scale(.4)
+  pointer-events: none
+  //opacity: 0
+  //transition: transform $animationTime, opacity $animationTime
+  z-index: -1
