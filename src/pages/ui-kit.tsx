@@ -17,6 +17,7 @@ import { Tag } from '@components/ui/Tag';
 import { Switcher } from '@components/ui/Switcher';
 import { Slider } from '@components/ui/Slider';
 import { Tabs } from '@components/ui/Tabs';
+import { Input } from '@components/ui/Input';
 import { NftCard } from '@components/common/NftCard';
 
 import s from '../styles/UiKit.module.sass';
@@ -55,10 +56,11 @@ const Home: React.FC = () => {
                 <p className={s.colorsHeader}>Primary</p>
                 <div className={cx(s.color, s.primary, s.primary100)}>100</div>
                 <div className={cx(s.color, s.primary, s.primary80)}>80</div>
+                <div className={cx(s.color, s.primary, s.primary60)}>60</div>
               </div>
               <div className={s.colorsColumn}>
                 <p className={s.colorsHeader}>Light</p>
-                <div className={cx(s.color, s.light)}>100</div>
+                <div className={cx(s.color, s.light)} />
               </div>
               <div className={s.colorsColumn}>
                 <p className={s.colorsHeader}>Solid</p>
@@ -68,11 +70,14 @@ const Home: React.FC = () => {
               <div className={s.colorsColumn}>
                 <p className={s.colorsHeader}>Gradients</p>
                 <div className={cx(s.color, s.gradientGreen)} />
+                <div className={cx(s.color, s.gradientGreenReverse)} />
                 <div className={cx(s.color, s.gradientPurple)} />
                 <div className={cx(s.color, s.gradientOrange)} />
                 <div className={cx(s.color, s.gradientBlue)} />
                 <div className={cx(s.color, s.gradientPink)} />
+                <div className={cx(s.color, s.gradientPinkVertical)} />
                 <div className={cx(s.color, s.gradientPink2)} />
+                <div className={cx(s.color, s.gradientRed)} />
               </div>
             </div>
           </div>
@@ -112,7 +117,7 @@ const Home: React.FC = () => {
             <Tag className={s.button} theme="orange">129 items</Tag>
           </div>
           <div className={s.block}>
-            <Heading title="Switcher" items={1} theme="orange" />
+            <Heading title="Switcher" theme="orange" />
             <Switcher
               className={s.button}
               isOn={switcherState}
@@ -120,7 +125,7 @@ const Home: React.FC = () => {
             />
           </div>
           <div className={s.block}>
-            <Heading title="Slider" items={1} />
+            <Heading title="Slider" />
             <div className={s.sliderAmounts}>
               <input
                 type="number"
@@ -150,7 +155,7 @@ const Home: React.FC = () => {
             />
           </div>
           <div className={s.block}>
-            <Heading title="Tabs" theme="orange" />
+            <Heading title="Tabs" theme="orange" items={4} />
             <Tabs
               className={s.tabs}
               tabs={tabs}
@@ -177,6 +182,47 @@ const Home: React.FC = () => {
               tabs={tabs}
               selectedTab={selectedTab}
               onChangeTab={(tab) => setSelectedTab(tab)}
+            />
+          </div>
+          <div className={s.block}>
+            <Heading title="Inputs & Textarea" theme="orange" items={6} />
+            <Input
+              className={s.input}
+              label="Total Supply"
+              placeholder="12.345"
+            />
+            <Input
+              className={s.input}
+              label="Total Supply (error)"
+              value="Some error value"
+              placeholder="12.345"
+              error="Some error message"
+            />
+            <Input
+              className={s.input}
+              label="Total Supply (success)"
+              value="Some success value"
+              placeholder="12.345"
+              success
+            />
+            <Input
+              className={s.input}
+              label="Total Supply (currency)"
+              placeholder="12.345"
+              currency="BNB"
+            />
+            <Input
+              className={s.input}
+              label="Total Supply (disabled)"
+              placeholder="12.345"
+              disabled
+            />
+            <Input
+              className={s.input}
+              label="Total Supply (textarea)"
+              value="Some long message"
+              placeholder="12.345"
+              textarea
             />
           </div>
           <div className={s.block}>
