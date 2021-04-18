@@ -4,6 +4,10 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { NextSeo } from 'next-seo';
 
+import {
+  convertFromNumberToPercent,
+  convertFromPercentToNumber,
+} from '@utils/helpers';
 import { BaseLayout } from '@layouts/BaseLayout';
 import { Container } from '@components/ui/Container';
 import { Row } from '@components/ui/Row';
@@ -11,15 +15,19 @@ import { Heading } from '@components/ui/Heading';
 import { Button } from '@components/ui/Button';
 import { Tag } from '@components/ui/Tag';
 import { Switcher } from '@components/ui/Switcher';
+import { Slider } from '@components/ui/Slider';
 import { NftCard } from '@components/common/NftCard';
 
 import s from '../styles/UiKit.module.sass';
 import { nftsArray } from '../content/nfts';
 
+const exampleTotalSupply = 10000;
+
 const Home: React.FC = () => {
   const { t } = useTranslation(['common', 'home']);
 
   const [switcherState, setSwitcherState] = useState(false);
+  const [sliderValue, setSliderValue] = useState(50);
 
   return (
     <BaseLayout>
@@ -103,6 +111,36 @@ const Home: React.FC = () => {
               className={s.button}
               isOn={switcherState}
               onSwitch={() => setSwitcherState(!switcherState)}
+            />
+          </div>
+          <div className={s.block}>
+            <Heading title="Slider" items={1} />
+            <div className={s.sliderAmounts}>
+              <input
+                type="number"
+                value={sliderValue.toFixed(2)}
+                onChange={(e) => setSliderValue(+e.target.value)}
+              />
+              % =
+              {' '}
+              <input
+                type="number"
+                value={convertFromPercentToNumber(sliderValue, exampleTotalSupply).toFixed(2)}
+                onChange={
+                  (e) => setSliderValue(
+                    convertFromNumberToPercent(+e.target.value, exampleTotalSupply),
+                  )
+                }
+              />
+              {' '}
+              FNFT
+            </div>
+            <Slider
+              minValue={10}
+              maxValue={90}
+              inputValue={sliderValue}
+              className={s.slider}
+              onDragEnd={(value) => setSliderValue(value)}
             />
           </div>
           <div className={s.block}>
