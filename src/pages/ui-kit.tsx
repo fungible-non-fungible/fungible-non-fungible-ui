@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import cx from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -7,9 +7,10 @@ import { NextSeo } from 'next-seo';
 import { BaseLayout } from '@layouts/BaseLayout';
 import { Container } from '@components/ui/Container';
 import { Row } from '@components/ui/Row';
+import { Heading } from '@components/ui/Heading';
 import { Button } from '@components/ui/Button';
 import { Tag } from '@components/ui/Tag';
-import { Heading } from '@components/ui/Heading';
+import { Switcher } from '@components/ui/Switcher';
 import { NftCard } from '@components/common/NftCard';
 
 import s from '../styles/UiKit.module.sass';
@@ -17,6 +18,8 @@ import { nftsArray } from '../content/nfts';
 
 const Home: React.FC = () => {
   const { t } = useTranslation(['common', 'home']);
+
+  const [switcherState, setSwitcherState] = useState(false);
 
   return (
     <BaseLayout>
@@ -93,6 +96,14 @@ const Home: React.FC = () => {
             <Heading title="Tags" items={2} />
             <Tag className={s.button}>12 items</Tag>
             <Tag className={s.button} theme="orange">129 items</Tag>
+          </div>
+          <div className={s.block}>
+            <Heading title="Switcher" items={1} theme="orange" />
+            <Switcher
+              className={s.button}
+              isOn={switcherState}
+              onSwitch={() => setSwitcherState(!switcherState)}
+            />
           </div>
           <div className={s.block}>
             <Heading title="Cards" />
