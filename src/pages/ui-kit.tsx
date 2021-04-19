@@ -57,7 +57,7 @@ const Home: React.FC = () => {
         <Row className={s.row}>
           <h1>UI Kit</h1>
           <div className={s.block}>
-            <Heading title="Colors" items={11} />
+            <Heading title="Colors" items={16} />
             <div className={s.colors}>
               <div className={s.colorsColumn}>
                 <p className={s.colorsHeader}>Primary</p>
@@ -124,7 +124,7 @@ const Home: React.FC = () => {
             <Tag className={s.button} theme="orange">129 items</Tag>
           </div>
           <div className={s.block}>
-            <Heading title="Socials" theme="orange" items={6} />
+            <Heading title="Socials" theme="orange" items={5} />
             <div className={s.socials}>
               <SocialButton
                 className={s.social}
@@ -314,6 +314,20 @@ const Home: React.FC = () => {
               label="Total Supply (currency)"
               placeholder="12.345"
               currency="BNB"
+            />
+            <Input
+              className={s.input}
+              label="Total Supply (currency)"
+              placeholder="12.345"
+              currency="BNB"
+              theme="orange"
+            />
+            <Input
+              className={s.input}
+              label="Total Supply (currency)"
+              placeholder="12.345"
+              currency="BNB"
+              theme="green"
             />
             <Input
               className={s.input}
