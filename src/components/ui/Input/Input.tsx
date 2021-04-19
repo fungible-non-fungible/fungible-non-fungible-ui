@@ -11,8 +11,21 @@ export type InputProps = {
   success?: boolean
   labelClassName?: string
   inputClassName?: string
+  theme?: keyof typeof themeClass
+  sizeT?: keyof typeof sizeClass
   currency?: string
 } & React.InputHTMLAttributes<HTMLInputElement>;
+
+const themeClass = {
+  blue: s.blue,
+  green: s.green,
+  orange: s.orange,
+};
+
+const sizeClass = {
+  default: s.default,
+  small: s.small,
+};
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   label,
@@ -25,6 +38,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   success = false,
   labelClassName,
   currency,
+  theme = 'blue',
+  sizeT = 'default',
   disabled,
   ...props
 }, ref) => {
@@ -37,6 +52,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
     { [s.errorInput]: !!error },
     { [s.success]: success },
     { [s.disabled]: disabled },
+    sizeClass[sizeT],
   );
 
   if (textarea) {
@@ -101,7 +117,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
           onBlur={() => setFocused(false)}
         />
         {currency && (
-          <p className={s.currency}>{currency}</p>
+          <p className={cx(s.currency, themeClass[theme])}>
+            {currency}
+          </p>
         )}
       </div>
 
