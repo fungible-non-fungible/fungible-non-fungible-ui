@@ -18,10 +18,11 @@ type ButtonProps = {
   | React.HTMLProps<HTMLAnchorElement>
 );
 
-const themeClass = {
+export const themeClass = {
   purple: s.purple,
   pink: s.pink,
   green: s.green,
+  orange: s.orange,
   blue: s.blue,
   clean: s.clean,
 };

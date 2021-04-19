@@ -14,7 +14,7 @@ type HeadingProps = {
   className?: string
 };
 
-const themeClass = {
+export const themeClass = {
   pink: s.pink,
   orange: s.orange,
 };
