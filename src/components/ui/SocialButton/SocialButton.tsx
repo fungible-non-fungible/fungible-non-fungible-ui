@@ -7,12 +7,17 @@ import PurpleBubbles from '@icons/socials/PurpleBubbles.svg';
 import GreenBubbles from '@icons/socials/GreenBubbles.svg';
 import OrangeBubbles from '@icons/socials/OrangeBubbles.svg';
 import PinkBubbles from '@icons/socials/PinkBubbles.svg';
+import GreenBubblesBig from '@icons/socials/GreenBubblesBig.svg';
+import OrangeBubblesBig from '@icons/socials/OrangeBubblesBig.svg';
+import PinkBubblesBig from '@icons/socials/PinkBubblesBig.svg';
 
 import s from './SocialButton.module.sass';
 
 type SocialButtonProps = {
   icon: ReactNode
+  href?: string
   theme?: keyof typeof themeClass
+  sizeT?: keyof typeof sizeClass
   className?: string
 };
 
@@ -24,9 +29,16 @@ const themeClass = {
   pink: s.pink,
 };
 
+const sizeClass = {
+  default: s.default,
+  big: s.big,
+};
+
 export const SocialButton: React.FC<SocialButtonProps> = ({
   icon,
+  href,
   theme = 'blue',
+  sizeT = 'default',
   className,
 }) => {
   let bubbles = <BlueBubbles className={s.bubbles} />;
@@ -34,20 +46,28 @@ export const SocialButton: React.FC<SocialButtonProps> = ({
     bubbles = <PurpleBubbles className={s.bubbles} />;
   }
   if (theme === 'green') {
-    bubbles = <GreenBubbles className={s.bubbles} />;
+    bubbles = sizeT === 'big'
+      ? <GreenBubblesBig className={s.bubbles} />
+      : <GreenBubbles className={s.bubbles} />;
   }
   if (theme === 'orange') {
-    bubbles = <OrangeBubbles className={s.bubbles} />;
+    bubbles = sizeT === 'big'
+      ? <OrangeBubblesBig className={s.bubbles} />
+      : <OrangeBubbles className={s.bubbles} />;
   }
   if (theme === 'pink') {
-    bubbles = <PinkBubbles className={s.bubbles} />;
+    bubbles = sizeT === 'big'
+      ? <PinkBubblesBig className={s.bubbles} />
+      : <PinkBubbles className={s.bubbles} />;
   }
 
   return (
     <motion.a
-      className={cx(s.root, themeClass[theme], className)}
-      type="button"
-      whileHover={{ scale: 1.3 }}
+      className={cx(s.root, themeClass[theme], sizeClass[sizeT], className)}
+      href={href}
+      target="_blank"
+      rel="nofollow noopener"
+      whileHover={{ scale: sizeT === 'big' ? 1.2 : 1.3 }}
       whileTap={{ scale: 0.9 }}
     >
       {icon}
