@@ -3,12 +3,7 @@
 
 .root
   position: relative
-  width: 26px
-  height: 26px
   display: flex
-  justify-content: center
-  align-items: center
-  display: block
   > svg:not(.bubbles)
     width: 100%
     height: auto
@@ -20,6 +15,10 @@
     .bubbles
       transform: translate(-50%, -50%) scale(.6)
       opacity: 0
+
+.default
+  width: 26px
+  height: 26px
 
 .bubbles
   position: absolute

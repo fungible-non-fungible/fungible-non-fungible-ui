@@ -25,6 +25,9 @@ import Facebook from '@icons/socials/Facebook.svg';
 import Telegram from '@icons/socials/Telegram.svg';
 import Email from '@icons/socials/Email.svg';
 import Link from '@icons/socials/Link.svg';
+import GithubBig from '@icons/socials/GithubBig.svg';
+import TelegramBig from '@icons/socials/TelegramBig.svg';
+import YoutubeBig from '@icons/socials/YoutubeBig.svg';
 
 import s from '../styles/UiKit.module.sass';
 import { nftsArray } from '../content/nfts';
@@ -124,7 +127,7 @@ const Home: React.FC = () => {
             <Tag className={s.button} theme="orange">129 items</Tag>
           </div>
           <div className={s.block}>
-            <Heading title="Socials" theme="orange" items={5} />
+            <Heading title="Socials" theme="orange" items={8} />
             <div className={s.socials}>
               <SocialButton
                 className={s.social}
@@ -149,6 +152,24 @@ const Home: React.FC = () => {
                 theme="pink"
                 className={s.social}
                 icon={<Link />}
+              />
+              <SocialButton
+                theme="orange"
+                sizeT="big"
+                className={s.social}
+                icon={<GithubBig />}
+              />
+              <SocialButton
+                theme="green"
+                sizeT="big"
+                className={s.social}
+                icon={<TelegramBig />}
+              />
+              <SocialButton
+                theme="pink"
+                sizeT="big"
+                className={s.social}
+                icon={<YoutubeBig />}
               />
             </div>
           </div>
