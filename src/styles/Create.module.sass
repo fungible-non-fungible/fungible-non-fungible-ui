@@ -1,0 +1,71 @@
+@import "@styles/variables"
+@import "@styles/breakpoints"
+
+.row
+  flex-direction: column
+  align-items: flex-start
+
+.header
+  margin-top: 200px
+
+.tabs
+  margin-bottom: 60px
+
+.input
+  &:not(:last-child)
+    margin-bottom: 40px
+
+.symbol
+  position: relative
+
+.switcher
+  position: absolute !important
+  top: -4px
+  right: 0
+
+.inputDescription
+  margin-top: 15px
+  font-size: 1rem
+
+.inputDescriptionBold
+  font-weight: bold
+  color: #63C58F
+  background: $gradient-green
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+
+.symbolDescription
+  max-height: 0
+  overflow: hidden
+  transition: max-height $animationTime
+  &.active
+    max-height: 20px
+
+.slider
+  width: 600px
+.sliderAmounts
+  width: 100%
+  display: flex
+  align-items: flex-start
+  font-size: 18px
+  font-weight: bold
+  margin-bottom: 25px
+  justify-content: flex-start
+.burn
+  margin-right: 40px
+  margin-top: 3px
+.equal
+  margin: 0 10px
+.sliderInput
+  width: 160px
+  max-width: 160px
+.currencies
+  display: flex
+  align-items: center
+.inputPercent
+  margin-left: auto
+
+.button
+  margin-top: 20px
+  margin-bottom: 80px
+  width: 200px
