@@ -1,0 +1,125 @@
+@import "@styles/variables"
+@import "@styles/breakpoints"
+
+.root
+  display: flex
+  flex-direction: column
+  flex: 1
+  width: 600px
+
+.label
+  font-weight: bold
+  margin-bottom: 10px
+  font-size: 20px
+
+.inputWrapper
+  position: relative
+  &::after, &::before
+    content: ''
+    position: absolute
+    top: 100%
+    left: 0
+    height: 2px
+  &::before
+    width: 100%
+    background-color: $light
+  &::after
+    width: 0
+    background: $gradient-pink
+    transition: width $animationTime
+
+.input
+  width: 100%
+  padding: 10px 12px
+  background-color: transparent
+  color: $light
+  border: none
+  font: $font
+  font-size: 1.125rem
+  outline: none
+  display: block
+  &::placeholder
+    color: rgba($light, .5)
+  &:disabled
+    cursor: not-allowed
+
+.textarea
+  height: 120px
+  resize: none
+  font-family: $font
+
+
+
+// STATES
+.hovered:not(.disabled):not(.focused)
+  &::after
+    width: 100px
+
+.focused
+  &::after
+    width: 100%
+
+.success
+  &::after
+    background: $gradient-green
+    width: 100%
+
+
+.errorContainer
+  max-height: 0
+  overflow: hidden
+  transition: max-height $animationTime
+.errorInput
+  &::after
+    background: $gradient-red
+    width: 100%
+.errorText
+  padding-top: 10px
+  font-size: 1rem
+  color: #F76F6F
+  line-height: 0.941rem
+  font-weight: 400
+.error
+  .errorContainer
+    max-height: 30px
+
+.disabled
+  cursor: not-allowed
+  &::before
+    background: rgba($light, .6)
+.disabledLabel
+  cursor: not-allowed
+  color: rgba($light, .6)
+
+.currency
+  font-size: 1.125rem
+  font-weight: bold
+  position: absolute
+  top: 50%
+  right: 12px
+  transform: translateY(-50%)
+  color: #56A3E6
+  background: $gradient-blue
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+
+.green
+  color: #63C58F
+  background: $gradient-green
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+
+.orange
+  color: #EA9055
+  background: $gradient-orange
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+
+.small
+  .input
+    padding: 6px 8px
+    font-size: 1rem
+  .currency
+    font-size: 1rem
+    &::before, &::after
+      height: 1px

@@ -1,0 +1,80 @@
+@import "@styles/variables"
+@import "@styles/breakpoints"
+
+.root
+  padding-top: 34px
+  padding-bottom: 10px
+
+.progress
+  width: 100%
+  height: 10px
+  background-color: $primary-60
+  border-radius: 5px
+  position: relative
+
+.burnPercent
+  position: absolute
+  top: -33px
+  font-size: 14px
+  font-weight: bold
+  &::after
+    content: ''
+    position: absolute
+    top: 100%
+    left: 7px
+    height: 36px
+    width: 2px
+    background: $gradient-pink-vertical
+    border-radius: 5px
+
+.holder
+  border-radius: 50%
+  overflow: hidden
+  width: 28px
+  height: 28px
+  transform: translateX(-50%)
+  position: absolute
+  bottom: calc(100% + 6px)
+  cursor: default
+  &:hover
+    z-index: 7 !important
+  > img
+    width: 100%
+
+.holderPercent
+  position: absolute
+  top: 0
+  left: 0
+  padding-top: 2px
+  width: 100%
+  height: 100%
+  background-color: rgba($primary-100, .6)
+  font-size: 10px
+  font-weight: bold
+  display: flex
+  justify-content: center
+  align-items: center
+  opacity: 0
+  transition: opacity $animationTime
+  &:hover
+    opacity: 1
+
+.holderProgress
+  height: 10px
+  border-radius: 5px
+  position: absolute
+  top: 0
+  left: 0
+  //border: .5px solid $primary-80
+
+.blue
+  background: $gradient-blue
+
+.green
+  background: $gradient-green-reverse
+
+.orange
+  background: $gradient-orange
+
+.pink
+  background: $gradient-pink

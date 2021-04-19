@@ -1,0 +1,164 @@
+@import "@styles/variables"
+
+.row
+  flex-direction: column
+  align-items: flex-start
+
+.block
+  padding: 110px 0
+
+.header
+  margin-bottom: 74px
+
+
+
+// COLORS
+.colors
+  display: flex
+  font-size: 1.25rem
+
+.colorsColumn
+  display: flex
+  flex-direction: column
+  align-items: center
+  &:not(:last-child)
+    margin-right: 80px
+
+.colorsHeader
+  font-weight: 600
+  margin-bottom: 40px
+
+.color
+  width: 80px
+  height: 80px
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 1.375rem
+  &:not(:last-child)
+    margin-bottom: 20px
+
+// Primary
+.primary100, .primary80
+  color: $light
+  border: 2px solid $light
+.primary100
+  background-color: $primary-100
+.primary80
+  background-color: $primary-80
+.primary60
+  background-color: $primary-60
+
+// Light
+.light
+  background-color: $light
+
+// Solid
+.solidGreen
+  background-color: $solid-green
+.solidPurple
+  background-color: $solid-purple
+
+// Gradients
+.gradientGreen
+  background: $gradient-green
+.gradientGreenReverse
+  background: $gradient-green-reverse
+.gradientPurple
+  background: $gradient-purple
+.gradientOrange
+  background: $gradient-orange
+.gradientBlue
+  background: $gradient-blue
+.gradientPink
+  background: $gradient-pink
+.gradientPinkVertical
+  background: $gradient-pink-vertical
+.gradientPink2
+  background: $gradient-pink-2
+.gradientRed
+  background: $gradient-red
+
+
+
+// Headings
+.headingItem
+  margin-bottom: 40px
+
+
+
+// BUTTONS
+.buttonsRow
+  display: flex
+  align-items: center
+  &:not(:last-child)
+    margin-bottom: 20px
+
+.buttonsHeader
+  width: 120px
+
+.button
+  &:not(:last-child)
+    margin-right: 20px
+
+
+
+// SOCIALS
+.socials
+  display: flex
+.social
+  &:not(:last-child)
+    margin-right: 60px
+
+
+
+// CARDS
+.cards
+  width: 100%
+  display: grid
+  grid-template-columns: repeat(4, 1fr)
+  grid-column-gap: 40px
+  grid-row-gap: 40px
+
+
+
+// SLIDERS
+.slider
+  width: 800px
+.sliderAmounts
+  width: 100%
+  display: flex
+  justify-content: space-between
+  align-items: flex-start
+  font-size: 18px
+  font-weight: bold
+  margin-bottom: 40px
+.sliderAmounts2
+  margin-top: 80px
+  justify-content: flex-start
+.burn
+  margin-right: 40px
+  margin-top: 3px
+.equal
+  margin: 0 10px
+.sliderInput
+  width: 160px
+  max-width: 160px
+.currencies
+  display: flex
+  align-items: center
+.inputPercent
+  margin-left: auto
+
+
+// TABS
+.tabs
+  &:not(:last-child)
+    margin-bottom: 20px
+
+
+
+// INPUTS & TEXTAREAS
+.input
+  &:not(:last-child)
+    margin-bottom: 40px
