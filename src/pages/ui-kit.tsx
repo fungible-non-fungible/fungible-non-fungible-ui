@@ -18,12 +18,19 @@ import { Switcher } from '@components/ui/Switcher';
 import { Slider } from '@components/ui/Slider';
 import { Tabs } from '@components/ui/Tabs';
 import { Input } from '@components/ui/Input';
+import { SocialButton } from '@components/ui/SocialButton';
 import { NftCard } from '@components/common/NftCard';
+import Twitter from '@icons/socials/Twitter.svg';
+import Facebook from '@icons/socials/Facebook.svg';
+import Telegram from '@icons/socials/Telegram.svg';
+import Email from '@icons/socials/Email.svg';
+import Link from '@icons/socials/Link.svg';
 
 import s from '../styles/UiKit.module.sass';
 import { nftsArray } from '../content/nfts';
 
 const exampleTotalSupply = 10000;
+const exampleExchangeRate = 20;
 const tabs = [
   'Create & Tokenize',
   'Tokenize',
@@ -117,6 +124,35 @@ const Home: React.FC = () => {
             <Tag className={s.button} theme="orange">129 items</Tag>
           </div>
           <div className={s.block}>
+            <Heading title="Socials" theme="orange" items={6} />
+            <div className={s.socials}>
+              <SocialButton
+                className={s.social}
+                icon={<Twitter />}
+              />
+              <SocialButton
+                theme="purple"
+                className={s.social}
+                icon={<Facebook />}
+              />
+              <SocialButton
+                theme="green"
+                className={s.social}
+                icon={<Telegram />}
+              />
+              <SocialButton
+                theme="orange"
+                className={s.social}
+                icon={<Email />}
+              />
+              <SocialButton
+                theme="pink"
+                className={s.social}
+                icon={<Link />}
+              />
+            </div>
+          </div>
+          <div className={s.block}>
             <Heading title="Switcher" theme="orange" />
             <Switcher
               className={s.button}
@@ -125,26 +161,94 @@ const Home: React.FC = () => {
             />
           </div>
           <div className={s.block}>
-            <Heading title="Slider" />
+            <Heading title="Sliders" items={2} />
             <div className={s.sliderAmounts}>
-              <input
-                type="number"
-                value={sliderValue.toFixed(2)}
-                onChange={(e) => setSliderValue(+e.target.value)}
-              />
-              % =
-              {' '}
-              <input
-                type="number"
-                value={convertFromPercentToNumber(sliderValue, exampleTotalSupply).toFixed(2)}
-                onChange={
+              <div className={s.currencies}>
+                <Input
+                  className={s.sliderInput}
+                  sizeT="small"
+                  type="number"
+                  value={convertFromPercentToNumber(sliderValue, exampleTotalSupply).toFixed(2)}
+                  onChange={
                   (e) => setSliderValue(
                     convertFromNumberToPercent(+e.target.value, exampleTotalSupply),
                   )
                 }
+                  currency="FNFT"
+                />
+                <span className={s.equal}>
+                  =
+                </span>
+                <Input
+                  className={s.sliderInput}
+                  sizeT="small"
+                  theme="green"
+                  type="number"
+                  value={(
+                    convertFromPercentToNumber(sliderValue, exampleTotalSupply)
+                      / exampleExchangeRate
+                  ).toFixed(2)}
+                  onChange={
+                  (e) => setSliderValue(
+                    convertFromNumberToPercent(
+                      +e.target.value * exampleExchangeRate,
+                      exampleTotalSupply,
+                    ),
+                  )
+                }
+                  currency="BNB"
+                />
+              </div>
+
+              <Input
+                className={cx(s.sliderInput, s.inputPercent)}
+                sizeT="small"
+                theme="orange"
+                type="number"
+                value={sliderValue.toFixed(2)}
+                onChange={(e) => setSliderValue(+e.target.value)}
+                currency="%"
               />
-              {' '}
-              FNFT
+            </div>
+            <Slider
+              minValue={10}
+              maxValue={90}
+              inputValue={sliderValue}
+              className={s.slider}
+              onDragEnd={(value) => setSliderValue(value)}
+            />
+            <div className={cx(s.sliderAmounts, s.sliderAmounts2)}>
+              <p className={s.burn}>
+                Burn percent
+              </p>
+              <div className={s.currencies}>
+                <Input
+                  className={cx(s.sliderInput, s.inputPercent)}
+                  sizeT="small"
+                  theme="green"
+                  type="number"
+                  value={sliderValue.toFixed(2)}
+                  onChange={(e) => setSliderValue(+e.target.value)}
+                  currency="%"
+                />
+                <span className={s.equal}>
+                  =
+                </span>
+
+                <Input
+                  className={s.sliderInput}
+                  sizeT="small"
+                  theme="orange"
+                  type="number"
+                  value={convertFromPercentToNumber(sliderValue, exampleTotalSupply).toFixed(2)}
+                  onChange={
+                    (e) => setSliderValue(
+                      convertFromNumberToPercent(+e.target.value, exampleTotalSupply),
+                    )
+                  }
+                  currency="FNFT"
+                />
+              </div>
             </div>
             <Slider
               minValue={10}

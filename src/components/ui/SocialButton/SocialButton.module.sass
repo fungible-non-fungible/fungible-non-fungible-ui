@@ -1,0 +1,30 @@
+@import "@styles/variables"
+@import "@styles/breakpoints"
+
+.root
+  position: relative
+  width: 26px
+  height: 26px
+  display: flex
+  justify-content: center
+  align-items: center
+  display: block
+  > svg:not(.bubbles)
+    width: 100%
+    height: auto
+  &:hover
+    .bubbles
+      transform: translate(-50%, -50%) scale(1)
+      opacity: 1
+  &:active
+    .bubbles
+      transform: translate(-50%, -50%) scale(.6)
+      opacity: 0
+
+.bubbles
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%) scale(.6)
+  opacity: 0
+  transition: transform $animationTime, opacity $animationTime
