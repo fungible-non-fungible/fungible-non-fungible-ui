@@ -1,0 +1,63 @@
+@import "@styles/variables"
+@import "@styles/breakpoints"
+
+.root
+  display: flex
+  justify-content: space-between
+  align-items: center
+  width: 100%
+  max-width: 430px
+  margin-left: auto
+  margin-right: auto
+  margin-top: 60px
+  padding: 20px 0
+  font-size: 20px
+
+.pages
+  display: flex
+  align-items: center
+  margin-top: 2px
+
+.page
+  width: 34px
+  height: 34px
+  margin-top: -7px
+  margin-bottom: -7px
+  color: $light
+  transition: background $animationTime
+  font-weight: 500
+  display: flex
+  justify-content: center
+  align-items: center
+  &:not(:last-child)
+    margin-right: 10px
+  &:not(.dots):not(.currentPage):hover
+    color: rgb(12, 80, 255)
+    background: $gradient-orange
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+
+.dots
+  margin-right: 8px
+  cursor: default
+
+.currentPage
+  color: rgb(12, 80, 255)
+  background: $gradient-green
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+  cursor: default
+
+.arrow
+  display: flex
+  justify-content: center
+  align-items: center
+  &.disabled
+    cursor: not-allowed
+    .icon
+      opacity: .5
+
+.icon
+  path
+    fill: $light
+    transition: fill $animationTime

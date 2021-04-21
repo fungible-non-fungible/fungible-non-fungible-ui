@@ -1,0 +1,9 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.9913 28.8388C15.6422 29.4897 16.6975 29.4897 17.3483 28.8388L25.4801 20.7071C25.8706 20.3166 25.8706 19.6834 25.4801 19.2929L17.3483 11.1612C16.6975 10.5103 15.6422 10.5103 14.9913 11.1612V11.1612C14.3404 11.8121 14.3404 12.8673 14.9913 13.5182L21.4731 20L14.9913 26.4818C14.3404 27.1327 14.3404 28.188 14.9913 28.8388V28.8388Z" fill="url(#ChevronRight-paint0_linear)"/>
+<defs>
+<linearGradient id="ChevronRight-paint0_linear" x1="13.8128" y1="20" x2="26.1872" y2="20" gradientUnits="userSpaceOnUse">
+<stop stop-color="#63C58F"/>
+<stop offset="1" stop-color="#65C9C9"/>
+</linearGradient>
+</defs>
+</svg>
