@@ -41,8 +41,8 @@ export const Header: React.FC<HeaderProps> = ({
       <Container>
         <Row>
           <Link href="/">
-            <a>
-              <FungibleNonFungible className={s.logo} />
+            <a className={s.logo}>
+              <FungibleNonFungible />
             </a>
           </Link>
           <nav className={s.navigation}>

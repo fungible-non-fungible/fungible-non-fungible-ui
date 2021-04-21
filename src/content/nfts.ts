@@ -4,6 +4,9 @@ export const nftsArray = [
     description: 'EDITION OF 3 presented in 16K resolution file',
     image: '/images/nft.jpg',
     slug: '/item-single',
+    totalSupply: 1000000,
+    tokenPrice: 0.0002,
+    tokenSymbol: 'FNFT',
     author: {
       accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
       image: '/images/author.jpg',
@@ -28,6 +31,9 @@ export const nftsArray = [
     description: 'There is no description provided for this collectible',
     image: '/images/nft2.jpg',
     slug: '/item-single',
+    totalSupply: 1000000,
+    tokenPrice: 0.0002,
+    tokenSymbol: 'FNFT',
     author: {
       accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
       image: '/images/User1.jpg',
@@ -44,9 +50,15 @@ export const nftsArray = [
   },
   {
     title: 'Otherworlder',
-    description: 'Origin unknown. Only known characteristic is the Otherworlder\'s honor.',
+    description: 'From “The drive” to “The Catch”, Every iconic sport moment is captured in this'
+      + ' very unique abstract digital artwork.\n\nFrom MJ to the greatest every, Many GOATs are in'
+      + ' displayed in this “One of a kind”.\n\nThis NFT is a must for the sports collector of the'
+      + ' 21st century!',
     image: '/images/nft3.jpg',
     slug: '/item-single',
+    totalSupply: 1000000,
+    tokenPrice: 0.0002,
+    tokenSymbol: 'FNFT',
     author: {
       accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
       image: '/images/User5.jpg',
@@ -60,12 +72,42 @@ export const nftsArray = [
       {
         accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
         image: '/images/User4.jpg',
-        percent: 23,
+        percent: 12,
       },
       {
         accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
         image: '/images/User5.jpg',
-        percent: 5,
+        percent: 6,
+      },
+      {
+        accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
+        image: '/images/User1.jpg',
+        percent: 4,
+      },
+      {
+        accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
+        image: '/images/User4.jpg',
+        percent: 3,
+      },
+      {
+        accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
+        image: '/images/User5.jpg',
+        percent: 2,
+      },
+      {
+        accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
+        image: '/images/User1.jpg',
+        percent: 2,
+      },
+      {
+        accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
+        image: '/images/User4.jpg',
+        percent: 2,
+      },
+      {
+        accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
+        image: '/images/User5.jpg',
+        percent: 1,
       },
     ],
     burnPercent: 84,
@@ -76,6 +118,9 @@ export const nftsArray = [
     description: 'This pill will take you to the moon.',
     image: '/images/nft4.jpg',
     slug: '/item-single',
+    totalSupply: 1000000,
+    tokenPrice: 0.0002,
+    tokenSymbol: 'FNFT',
     author: {
       accountPkh: '0xD598733d691A947bf0f17Baf946761aC71C440a6',
       image: '/images/User8.jpg',
