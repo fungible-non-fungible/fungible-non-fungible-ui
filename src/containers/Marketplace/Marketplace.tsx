@@ -10,10 +10,11 @@ import {
   Heading,
   themeClass as headingThemeClass,
 } from '@components/ui/Heading';
+import { Pagination } from '@components/common/Pagination';
 import { NftCard } from '@components/common/NftCard';
 
 import s from './Marketplace.module.sass';
-import { nftsArray } from '../../content/nfts';
+import { nftsArray, nftsBigArray } from '../../content/nfts';
 
 type MarketplaceProps = {
   title?: string
@@ -39,6 +40,8 @@ export const MarketplaceContainer: React.FC<MarketplaceProps> = ({
     router.replace(parentPath);
   }
 
+  const data = isPaginated ? nftsBigArray : nftsArray;
+
   return (
     <section className={cx(s.root, className)}>
       {title && (
@@ -49,7 +52,7 @@ export const MarketplaceContainer: React.FC<MarketplaceProps> = ({
         />
       )}
       <div className={s.cards}>
-        {nftsArray.map((nft) => (
+        {data.map((nft) => (
           <NftCard
             key={nft.slug}
             slug={nft.slug}
@@ -65,9 +68,10 @@ export const MarketplaceContainer: React.FC<MarketplaceProps> = ({
       </div>
       {isPaginated
         ? (
-          <span>
-            {/* TODO: Pagination */}
-          </span>
+          <Pagination
+            size={12}
+            countOfElements={120}
+          />
         )
         : (
           <Button
