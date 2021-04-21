@@ -8,6 +8,7 @@ module.exports = {
     'react/prop-types': 0,
     'import/prefer-default-export': 0,
     'jsx-a11y/anchor-is-valid': 0,
+    'no-nested-ternary': 0,
     'react-hooks/rules-of-hooks': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
     'no-plusplus': 0,

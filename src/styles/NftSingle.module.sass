@@ -1,0 +1,157 @@
+@import "@styles/variables"
+@import "@styles/breakpoints"
+
+.container
+  padding: 120px 0
+
+.item
+  width: 100%
+  background-color: $primary-80
+  border-radius: 50px
+  display: flex
+  align-items: flex-start
+  padding: 60px
+
+.imageWrapper
+  width: 42%
+  min-width: 42%
+  height: 100%
+  min-height: 400px
+  max-height: calc(100vh - 160px)
+  display: flex
+  justify-content: center
+  align-items: center
+  position: sticky
+  top: 90px
+  > img
+    width: 100%
+    height: 100%
+    object-fit: contain
+
+.socials
+  width: 120px
+  min-width: 120px
+  display: flex
+  flex-direction: column
+  align-items: center
+  position: sticky
+  top: 90px
+
+.social
+  &:not(:last-child)
+    margin-bottom: 20px
+
+.inner
+  position: relative
+  align-self: flex-start
+  flex-grow: 1
+
+.header
+  font-size: 2rem
+  margin-bottom: 10px
+
+.author
+  margin-bottom: 40px
+
+.description
+  white-space: pre-line
+  margin-top: 20px
+  margin-bottom: 40px
+
+.holdersProgress
+  margin-top: 20px
+
+.button
+  width: 200px
+  margin-top: 36px
+
+
+
+// INFO
+.infoItem
+  display: flex
+  align-items: center
+  font-size: 1.125rem
+  margin: 10px 0
+.infoHeader
+  font-size: 1.125rem
+  font-weight: normal
+.infoAmount
+  font-weight: bold
+  margin-left: 10px
+
+
+
+// SLIDER
+.slider
+  width: 100%
+.sliderAmounts
+  width: 100%
+  display: flex
+  justify-content: space-between
+  align-items: flex-start
+  font-size: 1.125rem
+  font-weight: bold
+  margin-bottom: 30px
+.sliderAmounts2
+  margin-top: 80px
+  justify-content: flex-start
+.burn
+  margin-right: 40px
+  margin-top: 3px
+.equal
+  margin: 0 10px
+.sliderInput
+  width: 160px
+  max-width: 160px
+.currencies
+  display: flex
+  align-items: center
+.inputPercent
+  margin-left: auto
+
+
+
+// COLORS
+.blue
+  color: #56A3E6
+  background: $gradient-blue
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+.green
+  color: #63C58F
+  background: $gradient-green
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+
+
+
+
+.heading
+  font-size: 1.5rem
+  color: #EBCD72
+  background: $gradient-orange
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+.purchaseHeader
+  margin-top: 60px
+  margin-bottom: 20px
+.holdersHeader
+  margin-top: 80px
+  margin-bottom: 20px
+.holders
+  display: flex
+  flex-wrap: wrap
+
+.holder
+  width: 33.333%
+  &:nth-child(1)
+    width: 75%
+    margin-left: auto
+    margin-right: auto
+  &:nth-child(2), &:nth-child(3)
+    width: 50%
+    margin-top: 40px
+    margin-bottom: 10px
+  &:not(:first-child)
+    margin-top: 20px
