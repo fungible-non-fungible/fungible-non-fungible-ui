@@ -4,7 +4,11 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { appWithTranslation } from 'next-i18next';
 import { DefaultSeo } from 'next-seo';
+import { UseWalletProvider } from 'use-wallet';
+
+import { chainId, walletConnectors } from '@utils/defaults';
 import { DEFAULT_SEO } from '@utils/default-seo.config';
+import { WalletReconnect } from '@containers/WalletReconnect';
 
 import '@styles/globals.sass';
 
@@ -27,7 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <>
+    <UseWalletProvider connectors={walletConnectors} chainId={chainId}>
       <DefaultSeo
         title={undefined}
         titleTemplate={`${DEFAULT_SEO.TITLE} | %s`}
@@ -126,7 +130,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Head>
       <Component {...pageProps} />
-    </>
+      <WalletReconnect />
+    </UseWalletProvider>
   );
 }
 
