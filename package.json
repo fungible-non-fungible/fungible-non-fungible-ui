@@ -10,7 +10,9 @@
     "makemessages": "i18next 'src/**/*.{js,jsx,ts,tsx}'"
   },
   "dependencies": {
+    "bignumber.js": "^9.0.1",
     "classnames": "^2.3.1",
+    "ethers": "^5.1.3",
     "framer-motion": "^4.1.4",
     "next": "10.1.3",
     "next-i18next": "^8.1.3",
@@ -19,7 +21,8 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "sass": "^1.32.8",
-    "shiitake": "^3.0.2"
+    "shiitake": "^3.0.2",
+    "use-wallet": "^0.8.1"
   },
   "devDependencies": {
     "@types/classnames": "^2.2.11",

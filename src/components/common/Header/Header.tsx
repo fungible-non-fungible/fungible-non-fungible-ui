@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import cx from 'classnames';
 import Link from 'next/link';
 
+import { WalletConnect } from '@containers/WalletConnect';
 import { Container } from '@components/ui/Container';
 import { Row } from '@components/ui/Row';
 import { Button } from '@components/ui/Button';
@@ -60,9 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
             <Button theme="green" href="/create">
               Create
             </Button>
-            <Button className={s.button}>
-              Connect wallet
-            </Button>
+            <WalletConnect className={s.button} />
           </div>
         </Row>
       </Container>
