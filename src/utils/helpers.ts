@@ -18,3 +18,7 @@ export const convertToCrypto = (value: number | BigNumber) => {
     Number(new BigNumber(value).div(1e18).toFormat(4, BigNumber.ROUND_FLOOR, { decimalSeparator: '.' }))
   );
 };
+
+export const formatName = (name: string) => (
+  name.trim().replaceAll(' ', '_')
+);
