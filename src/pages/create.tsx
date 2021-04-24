@@ -27,6 +27,7 @@ import { Row } from '@components/ui/Row';
 import { Heading } from '@components/ui/Heading';
 import { Tabs } from '@components/ui/Tabs';
 import { Input } from '@components/ui/Input';
+import { MediaInput } from '@components/ui/MediaInput';
 import { Switcher } from '@components/ui/Switcher';
 import { Slider } from '@components/ui/Slider';
 import { Button } from '@components/ui/Button';
@@ -198,16 +199,16 @@ const Create: React.FC = () => {
                     />
                   </>
                   )}
-                  <Field<FileList>
+                  <Field<File>
                     name="asset"
                   >
                     {({ input: { value, onChange, ...input }, meta }) => (
-                      <Input
+                      <MediaInput
                         {...input}
-                        type="file"
                         className={s.input}
                         label="Upload file"
-                        onChange={({ target }) => onChange(target.files)}
+                        value={value}
+                        onChange={(file) => onChange(file)}
                         disabled={selectedTab === tabs[1]}
                         error={(meta.touched && meta.error) || meta.submitError}
                         success={!meta.error && meta.touched && !meta.submitError}
@@ -383,14 +384,15 @@ const Create: React.FC = () => {
                   </Button>
                 </form>
                 <NftCard
+                  image={values.asset}
                   title={values.name || 'Print NFT\'s name'}
                   description={values.description || 'Print NFT\'s description'}
                   className={s.card}
                   author={{
                     accountPkh: account || zeroAddress,
                   }}
-                  burnPercent={values.burnPercent}
-                  price={(+values.totalSupply).toFixed(0) || 0}
+                  burnPercent={+(+values.burnPercent).toFixed(0)}
+                  price={values.totalSupply ? (+values.totalSupply).toFixed(0) : 0}
                   symbol={values.symbol || 'FNFT'}
                 />
               </div>

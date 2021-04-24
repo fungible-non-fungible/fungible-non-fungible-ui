@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import cx from 'classnames';
 import { motion } from 'framer-motion';
@@ -14,13 +14,14 @@ import {
   HolderProps,
 } from '@components/common/NftCard/HoldersProgress';
 
+import { MediaPreviewInfo, MediaType } from '@components/ui/MediaInput';
 import s from './NftCard.module.sass';
 
 export type MarketplaceCardProps = {
   slug?: string
   title: string
   description: string
-  image?: string
+  image?: string | File
   author: AuthorProps
   holders?: HolderProps[]
   burnPercent: number
@@ -45,6 +46,46 @@ export const NftCard: React.FC<MarketplaceCardProps> = ({
     s.root,
     className,
   );
+  const [mediaPreviewInfo, setMediaPreviewInfo] = useState<MediaPreviewInfo | string>();
+
+  useEffect(
+    () => {
+      if (image instanceof File) {
+        if (image) {
+          const reader = new FileReader();
+          reader.addEventListener(
+            'load',
+            ({ target }) => {
+              const previewUrl = target?.result;
+              if (typeof previewUrl === 'string') {
+                let type: MediaType;
+                if (image.type.startsWith('image/')) {
+                  type = MediaType.Image;
+                } else if (image.type.startsWith('video/')) {
+                  type = MediaType.Video;
+                } else {
+                  type = MediaType.Unknown;
+                }
+
+                setMediaPreviewInfo({
+                  type,
+                  url: previewUrl,
+                });
+              } else {
+                throw new Error('Received non string result from file reader');
+              }
+            },
+          );
+          reader.readAsDataURL(image);
+        } else {
+          setMediaPreviewInfo(undefined);
+        }
+      } else {
+        setMediaPreviewInfo(image);
+      }
+    },
+    [image],
+  );
 
   return (
     <motion.div
@@ -59,7 +100,16 @@ export const NftCard: React.FC<MarketplaceCardProps> = ({
         </Link>
       )}
       <div className={cx(s.imageWrapper, { [s.imageWrapperEmpty]: !image })}>
-        {image && <img src={image} alt={title} />}
+        {image && (
+          <img
+            src={
+              typeof mediaPreviewInfo === 'string'
+                ? mediaPreviewInfo
+                : mediaPreviewInfo?.url
+            }
+            alt={title}
+          />
+        )}
         <Author author={author} className={s.author} />
       </div>
       {slug ? (
