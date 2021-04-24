@@ -78,7 +78,7 @@ export const HoldersProgress: React.FC<HoldersProgressProps> = ({
           accountPkh={holder.accountPkh}
           image={holder.image}
           percent={holder.percent}
-          zIndex={holders.length - index + 2}
+          zIndex={holders?.slice(0, 3).length - index + 2}
         />
       ))}
     </div>
