@@ -19,6 +19,10 @@ export const convertToCrypto = (value: number | BigNumber) => {
   );
 };
 
+export function convertUnits(n: BigNumber, unit: number | BigNumber = 18) {
+  return n.div(new BigNumber(10).pow(unit));
+}
+
 export const formatName = (name: string) => (
   name.trim().replaceAll(' ', '_')
 );
