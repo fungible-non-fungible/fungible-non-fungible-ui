@@ -6,7 +6,7 @@ import { shortize } from '@utils/helpers';
 import s from './Author.module.sass';
 
 export type AuthorProps = {
-  image: string
+  image?: string
   accountPkh: string
 };
 
@@ -20,8 +20,8 @@ export const Author: React.FC<AuthorCardProps> = ({
   className,
 }) => (
   <div className={cx(s.root, className)}>
-    <div className={s.image}>
-      <img src={author.image} alt={author.accountPkh} />
+    <div className={cx(s.image, { [s.imageEmpty]: !author.image })}>
+      {author.image && <img src={author.image} alt={author.accountPkh} />}
     </div>
     <h5 className={s.accountPkh}>
       {shortize(author.accountPkh)}

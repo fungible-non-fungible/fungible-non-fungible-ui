@@ -17,14 +17,15 @@ import {
 import s from './NftCard.module.sass';
 
 export type MarketplaceCardProps = {
-  slug: string
+  slug?: string
   title: string
   description: string
-  image: string
+  image?: string
   author: AuthorProps
-  holders: HolderProps[]
+  holders?: HolderProps[]
   burnPercent: number
   price: number | string
+  symbol?: string
   className?: string
 };
 
@@ -37,6 +38,7 @@ export const NftCard: React.FC<MarketplaceCardProps> = ({
   holders,
   burnPercent,
   price,
+  symbol,
   className,
 }) => {
   const compoundClassName = cx(
@@ -50,30 +52,45 @@ export const NftCard: React.FC<MarketplaceCardProps> = ({
       whileTap={{ scale: 0.97 }}
       className={compoundClassName}
     >
-      <Link href={slug}>
-        {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-        <a className={s.link} />
-      </Link>
-      <div className={s.imageWrapper}>
-        <img src={image} alt={title} />
+      {slug && (
+        <Link href={slug}>
+          {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
+          <a className={s.link} />
+        </Link>
+      )}
+      <div className={cx(s.imageWrapper, { [s.imageWrapperEmpty]: !image })}>
+        {image && <img src={image} alt={title} />}
         <Author author={author} className={s.author} />
       </div>
-      <Shiitake
-        lines={1}
-        throttleRate={200}
-        className={s.title}
-        tagName="h3"
-      >
-        {title}
-      </Shiitake>
-      <Shiitake
-        lines={2}
-        throttleRate={200}
-        className={s.description}
-        tagName="p"
-      >
-        {description}
-      </Shiitake>
+      {slug ? (
+        <>
+          <Shiitake
+            lines={1}
+            throttleRate={200}
+            className={s.title}
+            tagName="h3"
+          >
+            {title}
+          </Shiitake>
+          <Shiitake
+            lines={2}
+            throttleRate={200}
+            className={s.description}
+            tagName="p"
+          >
+            {description}
+          </Shiitake>
+        </>
+      ) : (
+        <>
+          <h3 className={s.title}>
+            {title}
+          </h3>
+          <p className={s.description}>
+            {description}
+          </p>
+        </>
+      )}
       <HoldersProgress
         holders={holders}
         burnPercent={burnPercent}
@@ -83,16 +100,27 @@ export const NftCard: React.FC<MarketplaceCardProps> = ({
         <span className={s.price}>
           {price}
           {' '}
-          BNB
+          {symbol || 'BNB'}
         </span>
-        <Button
-          className={s.button}
-          sizeT="medium"
-          theme="green"
-          href={slug}
-        >
-          Purchase
-        </Button>
+        {slug ? (
+          <Button
+            className={s.button}
+            sizeT="medium"
+            theme="green"
+            href={slug}
+          >
+            Purchase
+          </Button>
+        ) : (
+          <Button
+            className={s.button}
+            sizeT="medium"
+            theme="green"
+            disabled
+          >
+            Purchase
+          </Button>
+        )}
       </div>
     </motion.div>
   );
