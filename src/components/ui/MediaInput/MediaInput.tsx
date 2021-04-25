@@ -84,10 +84,11 @@ export const MediaInput: React.FC<MediaInputProps> = ({
     [value],
   );
 
-  const onInputChange: InputProps['onChange'] = ({ target }) => {
+  const onInputChange: InputProps['onChange'] = (e) => {
     onChange(
-      target.files?.length ? target.files[0] : undefined,
+      e.target.files?.length ? e.target.files[0] : undefined,
     );
+    e.preventDefault();
   };
 
   return (
