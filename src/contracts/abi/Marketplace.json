@@ -347,6 +347,46 @@
     "constant": true
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "nftData",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "fnft",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minLevel",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "PSFinalPrice",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
     "inputs": [],
     "name": "owner",
     "outputs": [
@@ -441,6 +481,11 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -449,14 +494,9 @@
     "name": "userData",
     "outputs": [
       {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_tokenURI",
-        "type": "string"
+        "internalType": "address",
+        "name": "fnft",
+        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -469,9 +509,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "string",
-        "name": "symbol",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "PSFinalPrice",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -633,6 +673,11 @@
         "internalType": "string",
         "name": "symbol",
         "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minLevel",
+        "type": "uint256"
       },
       {
         "internalType": "bool",

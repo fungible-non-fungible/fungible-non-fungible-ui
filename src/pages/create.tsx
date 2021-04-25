@@ -3,8 +3,15 @@ import cx from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { NextSeo } from 'next-seo';
-import { Field, withTypes } from 'react-final-form';
-import { FormApi, getIn } from 'final-form';
+import BigNumber from 'bignumber.js';
+import {
+  Field,
+  withTypes,
+} from 'react-final-form';
+import {
+  FormApi,
+  getIn,
+} from 'final-form';
 import { useWallet } from 'use-wallet';
 import { BigNumber as EthersBigNumber } from 'ethers';
 import focusDecorator from 'final-form-focus';
@@ -12,7 +19,7 @@ import focusDecorator from 'final-form-focus';
 import { zeroAddress } from '@utils/defaults';
 import {
   convertFromNumberToPercent,
-  convertFromPercentToNumber,
+  convertFromPercentToNumber, convertUnits,
   formatName,
 } from '@utils/helpers';
 import {
@@ -55,6 +62,7 @@ type FormValues = {
   description: string
   symbol: string
   totalSupply: number
+  liquidityAmount: number
   burnPercent: number
 };
 
@@ -81,10 +89,10 @@ const Create: React.FC = () => {
     try {
       // Load file to ipfs and format it
       setPendingMessage('Loading asset to IPFS');
-      const fileName = formatName(values.asset[0].name);
+      const fileName = formatName(values.asset.name);
       const ipfsFile = await ipfs.add({
         path: fileName,
-        content: values.asset[0].file,
+        content: values.asset.file,
       },
       {
         wrapWithDirectory: true,
@@ -109,32 +117,32 @@ const Create: React.FC = () => {
       });
       const ipfsJsonUrl = `ipfs://${json.cid.string}/${jsonPath}`;
 
-      console.log({
-        _tokenURI: ipfsJsonUrl,
-        amount: EthersBigNumber.from(values.totalSupply.toString()),
-        minLevel: EthersBigNumber.from(values.burnPercent.toString()),
-        symbol: values.symbol,
-      });
-
-      // Allowance for fee
-      // setPendingMessage('Setting allowance for BNB');
-      // await ensureAllowance(
-      //   marketplaceContract,
-      //   {
-      //     owner: account!,
-      //     spender: marketplaceAddress,
-      //     expense: convertUnits(new BigNumber(0.007), -8),
-      //   },
-      // );
-
       // Creating NFT
       setPendingMessage('Creating NFT');
-      const resultOfCreation = marketplaceContract.createNFT(
-        ipfsJsonUrl,
-        EthersBigNumber.from(values.totalSupply.toString()),
-        EthersBigNumber.from(+values.burnPercent.toFixed(0).toString()),
-        values.symbol,
-      );
+      const resultOfCreation = marketplaceContract
+        .createNFT(
+          ipfsJsonUrl,
+          EthersBigNumber.from(values.totalSupply.toString()),
+          EthersBigNumber.from(
+            convertUnits(
+              new BigNumber(values.totalSupply)
+                .multipliedBy(new BigNumber(values.burnPercent).div(new BigNumber(100))),
+              -8,
+            ).toString(),
+          ),
+          values.symbol,
+          {
+            from: account,
+            gasLimit: 30000000,
+            value: EthersBigNumber.from(
+              convertUnits(
+                new BigNumber(+values.liquidityAmount + 0.07),
+                -18,
+              )
+                .toString(),
+            ),
+          },
+        );
       if (!resultOfCreation) {
         throw new Error('Something went wrong when creating NFT');
       }
@@ -143,7 +151,7 @@ const Create: React.FC = () => {
     } finally {
       setPendingMessage(undefined);
     }
-  }, [marketplaceContract, pendingMessage]);
+  }, [account, marketplaceContract, pendingMessage]);
 
   return (
     <BaseLayout>
@@ -318,6 +326,25 @@ const Create: React.FC = () => {
                       <span className={s.inputDescriptionBold}>0.07 BNB</span>
                     </p>
                   </div>
+                  <Field
+                    name="liquidityAmount"
+                    validate={composeValidators(
+                      required,
+                    )}
+                  >
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type="text"
+                        label="Liquidity amount"
+                        placeholder="1200329"
+                        currency="BNB"
+                        className={s.input}
+                        error={(meta.touched && meta.error) || meta.submitError}
+                        success={!meta.error && meta.touched && !meta.submitError}
+                      />
+                    )}
+                  </Field>
                   <div className={cx(s.sliderAmounts)}>
                     <p className={s.burn}>
                       Burn percent
@@ -392,7 +419,11 @@ const Create: React.FC = () => {
                     accountPkh: account || zeroAddress,
                   }}
                   burnPercent={+(+values.burnPercent).toFixed(0)}
-                  price={values.totalSupply ? (+values.totalSupply).toFixed(0) : 0}
+                  price={
+                    values.totalSupply || values.liquidityAmount
+                      ? (+values.liquidityAmount / +values.totalSupply).toFixed(0)
+                      : 0
+                  }
                   symbol={values.symbol || 'FNFT'}
                 />
               </div>
