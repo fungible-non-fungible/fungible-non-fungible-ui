@@ -73,6 +73,7 @@ type FormValues = {
 const CreatePage: React.FC = () => {
   const { t } = useTranslation(['common', 'creating']);
   const { account } = useWallet();
+  const provider = useWalletProvider();
   const marketplaceContract = useMarketplaceContract(true);
 
   // States
@@ -80,7 +81,6 @@ const CreatePage: React.FC = () => {
   const [customSymbol, setCustomSymbol] = useState(false);
   const [pendingMessage, setPendingMessage] = useState<string>();
   const [showFullTokenizeForm, setShowFullTokenizeForm] = useState(false);
-  setShowFullTokenizeForm(false);
 
   const { Form } = withTypes<FormValues>();
 
@@ -159,8 +159,7 @@ const CreatePage: React.FC = () => {
     }
   }, [account, marketplaceContract, pendingMessage]);
 
-  const provider = useWalletProvider();
-  const loadNftInfo = async (address: string, id: number) => {
+  const loadNftInfo = useCallback(async (address: string, id: number) => {
     if (!address || !id || !provider) {
       return;
     }
@@ -178,7 +177,9 @@ const CreatePage: React.FC = () => {
     console.log('jsonReslut', jsonResult);
     const jsonResult2 = await fetch(`https://ipfs.io/ipfs/${resultOfInformation.replace('ipfs://', '')}`);
     console.log('jsonReslut2', jsonResult2);
-  };
+
+    setShowFullTokenizeForm(true);
+  }, [provider]);
 
   return (
     <BaseLayout>
