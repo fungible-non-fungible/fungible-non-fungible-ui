@@ -70,7 +70,7 @@ type FormValues = {
   burnPercent: number
 };
 
-const Create: React.FC = () => {
+const CreatePage: React.FC = () => {
   const { t } = useTranslation(['common', 'creating']);
   const { account } = useWallet();
   const marketplaceContract = useMarketplaceContract(true);
@@ -512,4 +512,4 @@ export const getStaticProps = async ({ locale }: { locale: string }) => ({
   },
 });
 
-export default Create;
+export default CreatePage;
