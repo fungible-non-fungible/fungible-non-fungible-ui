@@ -19,7 +19,8 @@ import focusDecorator from 'final-form-focus';
 import { zeroAddress } from '@utils/defaults';
 import {
   convertFromNumberToPercent,
-  convertFromPercentToNumber, convertUnits,
+  convertFromPercentToNumber,
+  convertUnits,
   formatName,
 } from '@utils/helpers';
 import {
@@ -27,7 +28,10 @@ import {
   required,
 } from '@utils/validators';
 import { ipfs } from '@utils/ipfs';
+import { useWalletProvider } from '@utils/wallet';
 import useMarketplaceContract from '@contracts/useMarketplaceContract';
+import { makeContracts } from '@contracts/useContracts';
+import externalNFTAbi from '@contracts/abi/ExternalNFT.json';
 import { BaseLayout } from '@layouts/BaseLayout';
 import { Container } from '@components/ui/Container';
 import { Row } from '@components/ui/Row';
@@ -75,6 +79,8 @@ const Create: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const [customSymbol, setCustomSymbol] = useState(false);
   const [pendingMessage, setPendingMessage] = useState<string>();
+  const [showFullTokenizeForm, setShowFullTokenizeForm] = useState(false);
+  setShowFullTokenizeForm(false);
 
   const { Form } = withTypes<FormValues>();
 
@@ -153,6 +159,25 @@ const Create: React.FC = () => {
     }
   }, [account, marketplaceContract, pendingMessage]);
 
+  const provider = useWalletProvider();
+  const loadNftInfo = async (address: string, id: number) => {
+    if (!address || !id || !provider) {
+      return;
+    }
+
+    const contracts = makeContracts(
+      {
+        addresses: ['0xdf7952b35f24acf7fc0487d01c8d5690a60dba07'],
+        abi: externalNFTAbi,
+      },
+      provider,
+    );
+
+    const resultOfInformation = await contracts[0]?.tokenURI(EthersBigNumber.from('1'));
+    const jsonResult = await fetch(`https://ipfs.infura.io:5001/api/v0/object/get?arg=${resultOfInformation.replace('ipfs://', '')}`);
+    console.log('jsonReslut', jsonResult);
+  };
+
   return (
     <BaseLayout>
       <NextSeo
@@ -185,6 +210,18 @@ const Create: React.FC = () => {
               setBurnPercent: ([value], state, utils) => {
                 utils.changeValue(state, 'burnPercent', () => value);
               },
+              setAsset: ([value], state, utils) => {
+                utils.changeValue(state, 'asset', () => value);
+              },
+              setName: ([value], state, utils) => {
+                utils.changeValue(state, 'name', () => value);
+              },
+              setDescription: ([value], state, utils) => {
+                utils.changeValue(state, 'description', () => value);
+              },
+              setSymbol: ([value], state, utils) => {
+                utils.changeValue(state, 'symbol', () => value);
+              },
             }}
             render={({
               form, handleSubmit, submitting, values,
@@ -205,72 +242,37 @@ const Create: React.FC = () => {
                       label="NFT id"
                       placeholder="2"
                     />
+                    {!showFullTokenizeForm && (
+                      <Button
+                        theme="orange"
+                        className={s.button}
+                        onClick={() => loadNftInfo('123', 1)}
+                      >
+                        Load NFT&apos;s info
+                      </Button>
+                    )}
                   </>
                   )}
-                  <Field<File>
-                    name="asset"
-                  >
-                    {({ input: { value, onChange, ...input }, meta }) => (
-                      <MediaInput
-                        {...input}
-                        className={s.input}
-                        label="Upload file"
-                        value={value}
-                        onChange={(file) => onChange(file)}
-                        disabled={selectedTab === tabs[1]}
-                        error={(meta.touched && meta.error) || meta.submitError}
-                        success={!meta.error && meta.touched && !meta.submitError}
-                      />
-                    )}
-                  </Field>
-                  <Field
-                    name="name"
-                    validate={composeValidators(
-                      required,
-                    )}
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        type="text"
-                        className={s.input}
-                        label="Name"
-                        placeholder="e.g. My Awesome NFT"
-                        disabled={selectedTab === tabs[1]}
-                        error={(meta.touched && meta.error) || meta.submitError}
-                        success={!meta.error && meta.touched && !meta.submitError}
-                      />
-                    )}
-                  </Field>
-                  <Field
-                    name="description"
-                    validate={composeValidators(
-                      required,
-                    )}
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        textarea
-                        className={s.input}
-                        label="Description"
-                        placeholder="e.g. Some words about my token"
-                        disabled={selectedTab === tabs[1]}
-                        error={(meta.touched && meta.error) || meta.submitError}
-                        success={!meta.error && meta.touched && !meta.submitError}
-                      />
-                    )}
-                  </Field>
-                  <div className={cx(s.input, s.symbol)}>
-                    {selectedTab === tabs[0] && (
-                    <Switcher
-                      isOn={customSymbol}
-                      onSwitch={() => setCustomSymbol(!customSymbol)}
-                      className={s.switcher}
-                    />
-                    )}
+                  {(selectedTab === tabs[0] || showFullTokenizeForm) && (
+                  <>
+                    <Field<File>
+                      name="asset"
+                    >
+                      {({ input: { value, onChange, ...input }, meta }) => (
+                        <MediaInput
+                          {...input}
+                          className={s.input}
+                          label="Upload file"
+                          value={value}
+                          onChange={(file) => onChange(file)}
+                          disabled={selectedTab === tabs[1]}
+                          error={(meta.touched && meta.error) || meta.submitError}
+                          success={!meta.error && meta.touched && !meta.submitError}
+                        />
+                      )}
+                    </Field>
                     <Field
-                      name="symbol"
+                      name="name"
                       validate={composeValidators(
                         required,
                       )}
@@ -279,31 +281,17 @@ const Create: React.FC = () => {
                         <Input
                           {...input}
                           type="text"
-                          label={selectedTab === tabs[0] ? 'Custom token symbol' : 'Token symbol'}
-                          placeholder="FNFT"
-                          disabled={!customSymbol || selectedTab === tabs[1]}
-                          inputClassName={s.symbolInput}
+                          className={s.input}
+                          label="Name"
+                          placeholder="e.g. My Awesome NFT"
+                          disabled={selectedTab === tabs[1]}
                           error={(meta.touched && meta.error) || meta.submitError}
                           success={!meta.error && meta.touched && !meta.submitError}
                         />
                       )}
                     </Field>
-                    {selectedTab === tabs[0] && (
-                    <p className={cx(
-                      s.inputDescription,
-                      s.symbolDescription,
-                      { [s.active]: customSymbol },
-                    )}
-                    >
-                      Service Fee
-                      {' '}
-                      <span className={s.inputDescriptionBold}>0.005 BNB</span>
-                    </p>
-                    )}
-                  </div>
-                  <div className={s.input}>
                     <Field
-                      name="totalSupply"
+                      name="description"
                       validate={composeValidators(
                         required,
                       )}
@@ -311,47 +299,26 @@ const Create: React.FC = () => {
                       {({ input, meta }) => (
                         <Input
                           {...input}
-                          type="text"
-                          label="Total supply"
-                          placeholder="1200329"
-                          currency={values.symbol || 'FNFT'}
+                          textarea
+                          className={s.input}
+                          label="Description"
+                          placeholder="e.g. Some words about my token"
+                          disabled={selectedTab === tabs[1]}
                           error={(meta.touched && meta.error) || meta.submitError}
                           success={!meta.error && meta.touched && !meta.submitError}
                         />
                       )}
                     </Field>
-                    <p className={s.inputDescription}>
-                      Service Fee
-                      {' '}
-                      <span className={s.inputDescriptionBold}>0.07 BNB</span>
-                    </p>
-                  </div>
-                  <Field
-                    name="liquidityAmount"
-                    validate={composeValidators(
-                      required,
-                    )}
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        type="text"
-                        label="Liquidity amount"
-                        placeholder="1200329"
-                        currency="BNB"
-                        className={s.input}
-                        error={(meta.touched && meta.error) || meta.submitError}
-                        success={!meta.error && meta.touched && !meta.submitError}
+                    <div className={cx(s.input, s.symbol)}>
+                      {selectedTab === tabs[0] && (
+                      <Switcher
+                        isOn={customSymbol}
+                        onSwitch={() => setCustomSymbol(!customSymbol)}
+                        className={s.switcher}
                       />
-                    )}
-                  </Field>
-                  <div className={cx(s.sliderAmounts)}>
-                    <p className={s.burn}>
-                      Burn percent
-                    </p>
-                    <div className={s.currencies}>
+                      )}
                       <Field
-                        name="burnPercent"
+                        name="symbol"
                         validate={composeValidators(
                           required,
                         )}
@@ -359,72 +326,168 @@ const Create: React.FC = () => {
                         {({ input, meta }) => (
                           <Input
                             {...input}
-                            className={cx(s.sliderInput, s.inputPercent)}
-                            sizeT="small"
-                            theme="green"
-                            type="number"
-                            value={(+input.value).toFixed(2)}
-                            currency="%"
+                            type="text"
+                            label={selectedTab === tabs[0] ? 'Custom token symbol' : 'Token symbol'}
+                            placeholder="FNFT"
+                            disabled={!customSymbol || selectedTab === tabs[1]}
+                            inputClassName={s.symbolInput}
                             error={(meta.touched && meta.error) || meta.submitError}
                             success={!meta.error && meta.touched && !meta.submitError}
                           />
                         )}
                       </Field>
-                      <span className={s.equal}>
-                        =
-                      </span>
-
-                      <Input
-                        className={s.sliderInput}
-                        sizeT="small"
-                        theme="orange"
-                        type="number"
-                        value={convertFromPercentToNumber(
-                          values.burnPercent,
-                          +values.totalSupply || 0,
-                        ).toFixed(2)}
-                        onChange={
-                          (e) => form.mutators.setBurnPercent(
-                            convertFromNumberToPercent(
-                              +e.target.value,
-                              +values.totalSupply || 0,
-                            ),
-                          )
-                        }
-                        currency={values.symbol || 'FNFT'}
-                      />
+                      {selectedTab === tabs[0] && (
+                      <p className={cx(
+                        s.inputDescription,
+                        s.symbolDescription,
+                        { [s.active]: customSymbol },
+                      )}
+                      >
+                        Service Fee
+                        {' '}
+                        <span className={s.inputDescriptionBold}>0.005 BNB</span>
+                      </p>
+                      )}
                     </div>
-                  </div>
-                  <Slider
-                    minValue={50}
-                    maxValue={90}
-                    inputValue={values.burnPercent}
-                    className={cx(s.input, s.slider)}
-                    onDragEnd={(value) => form.mutators.setBurnPercent(value.toFixed(2))}
-                  />
-                  <Button
-                    type="submit"
-                    className={s.button}
-                    disabled={submitting}
-                  >
-                    Create
-                  </Button>
+                    <div className={s.input}>
+                      <Field
+                        name="totalSupply"
+                        validate={composeValidators(
+                          required,
+                        )}
+                      >
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            type="text"
+                            label="Total supply"
+                            placeholder="1200329"
+                            currency={values.symbol || 'FNFT'}
+                            error={(meta.touched && meta.error) || meta.submitError}
+                            success={!meta.error && meta.touched && !meta.submitError}
+                          />
+                        )}
+                      </Field>
+                      <p className={s.inputDescription}>
+                        Service Fee
+                        {' '}
+                        <span className={s.inputDescriptionBold}>0.07 BNB</span>
+                      </p>
+                    </div>
+                    <Field
+                      name="liquidityAmount"
+                      validate={composeValidators(
+                        required,
+                      )}
+                    >
+                      {({ input, meta }) => (
+                        <Input
+                          {...input}
+                          type="text"
+                          label="Liquidity amount"
+                          placeholder="1200329"
+                          currency="BNB"
+                          className={s.input}
+                          error={(meta.touched && meta.error) || meta.submitError}
+                          success={!meta.error && meta.touched && !meta.submitError}
+                        />
+                      )}
+                    </Field>
+                    <div className={cx(s.sliderAmounts)}>
+                      <p className={s.burn}>
+                        Burn percent
+                      </p>
+                      <div className={s.currencies}>
+                        <Field
+                          name="burnPercent"
+                          validate={composeValidators(
+                            required,
+                          )}
+                        >
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              className={cx(s.sliderInput, s.inputPercent)}
+                              sizeT="small"
+                              theme="green"
+                              type="number"
+                              value={(+input.value).toFixed(2)}
+                              currency="%"
+                              error={(meta.touched && meta.error) || meta.submitError}
+                              success={!meta.error && meta.touched && !meta.submitError}
+                            />
+                          )}
+                        </Field>
+                        <span className={s.equal}>
+                          =
+                        </span>
+
+                        <Input
+                          className={s.sliderInput}
+                          sizeT="small"
+                          theme="orange"
+                          type="number"
+                          value={convertFromPercentToNumber(
+                            values.burnPercent,
+                            +values.totalSupply || 0,
+                          ).toFixed(2)}
+                          onChange={
+                            (e) => form.mutators.setBurnPercent(
+                              convertFromNumberToPercent(
+                                +e.target.value,
+                                +values.totalSupply || 0,
+                              ),
+                            )
+                          }
+                          currency={values.symbol || 'FNFT'}
+                        />
+                      </div>
+                    </div>
+                    <Slider
+                      minValue={50}
+                      maxValue={90}
+                      inputValue={values.burnPercent}
+                      className={cx(s.input, s.slider)}
+                      onDragEnd={(value) => form.mutators.setBurnPercent(value.toFixed(2))}
+                    />
+                    <Button
+                      type="submit"
+                      className={s.button}
+                      disabled={submitting}
+                    >
+                      Create
+                    </Button>
+                  </>
+                  )}
                 </form>
                 <NftCard
-                  image={values.asset}
-                  title={values.name || 'Print NFT\'s name'}
-                  description={values.description || 'Print NFT\'s description'}
+                  image={(selectedTab === tabs[0] || showFullTokenizeForm) ? values.asset : null}
+                  title={
+                    (selectedTab === tabs[0] || showFullTokenizeForm) && values.name
+                      ? values.name
+                      : 'Print NFT\'s name'
+                  }
+                  description={
+                    (selectedTab === tabs[0] || showFullTokenizeForm) && values.description
+                      ? values.description
+                      : 'Print NFT\'s description'
+                  }
                   className={s.card}
                   author={{
                     accountPkh: account || zeroAddress,
                   }}
                   burnPercent={+(+values.burnPercent).toFixed(0)}
                   price={
-                    values.totalSupply || values.liquidityAmount
-                      ? (+values.liquidityAmount / +values.totalSupply).toFixed(0)
+                    (selectedTab === tabs[0] || showFullTokenizeForm)
+                    && values.totalSupply
+                    && values.liquidityAmount
+                      ? Number(
+                        new BigNumber(values.liquidityAmount)
+                          .div(new BigNumber(values.totalSupply))
+                          .toFormat(8, BigNumber.ROUND_FLOOR, { decimalSeparator: '.' }),
+                      )
                       : 0
                   }
-                  symbol={values.symbol || 'FNFT'}
                 />
               </div>
             )}
