@@ -71,7 +71,7 @@ type FormValues = {
 };
 
 const Create: React.FC = () => {
-  const { t } = useTranslation(['common', 'create']);
+  const { t } = useTranslation(['common', 'creating']);
   const { account } = useWallet();
   const marketplaceContract = useMarketplaceContract(true);
 
@@ -183,11 +183,11 @@ const Create: React.FC = () => {
   return (
     <BaseLayout>
       <NextSeo
-        title={t('create:Home page')}
-        description={t('create:Home page description. Couple sentences...')}
+        title={t('creating:Home page')}
+        description={t('creating:Home page description. Couple sentences...')}
         openGraph={{
-          title: t('create:Home page'),
-          description: t('create:Home page description. Couple sentences...'),
+          title: t('creating:Home page'),
+          description: t('creating:Home page description. Couple sentences...'),
         }}
       />
       <Container>
@@ -508,7 +508,7 @@ const Create: React.FC = () => {
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...await serverSideTranslations(locale, ['common', 'create']),
+    ...await serverSideTranslations(locale, ['common', 'creating']),
   },
 });
 
