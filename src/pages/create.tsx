@@ -176,6 +176,8 @@ const Create: React.FC = () => {
     const resultOfInformation = await contracts[0]?.tokenURI(EthersBigNumber.from('1'));
     const jsonResult = await fetch(`https://ipfs.infura.io:5001/api/v0/object/get?arg=${resultOfInformation.replace('ipfs://', '')}`);
     console.log('jsonReslut', jsonResult);
+    const jsonResult2 = await fetch(`https://ipfs.io/ipfs/${resultOfInformation.replace('ipfs://', '')}`);
+    console.log('jsonReslut2', jsonResult2);
   };
 
   return (
