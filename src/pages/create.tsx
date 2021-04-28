@@ -115,7 +115,7 @@ const CreatePage: React.FC = () => {
       const fileName = formatName(values.asset.name);
       const ipfsFile = await ipfs.add({
         path: fileName,
-        content: values.asset.file,
+        content: values.asset,
       },
       {
         wrapWithDirectory: true,
