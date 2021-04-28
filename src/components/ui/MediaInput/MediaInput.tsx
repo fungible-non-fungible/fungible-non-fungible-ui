@@ -14,7 +14,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 type MediaInputProps = Omit<InputProps, 'value' | 'type' | 'onChange'> & {
   label?: string
   labelClassName?: string
-  value?: File
+  value?: File | string
   error?: string
   success?: boolean
   onChange: (file?: File) => void
@@ -35,6 +35,7 @@ export const MediaInput: React.FC<MediaInputProps> = ({
   value,
   error,
   success = false,
+  disabled,
   onChange,
   className,
   ...inputProps
@@ -46,37 +47,45 @@ export const MediaInput: React.FC<MediaInputProps> = ({
     s.root,
     { [s.errorInput]: !!error },
     { [s.success]: success },
+    { [s.disabled]: disabled },
     className,
   );
 
   useEffect(
     () => {
       if (value) {
-        const reader = new FileReader();
-        reader.addEventListener(
-          'load',
-          ({ target }) => {
-            const previewUrl = target?.result;
-            if (typeof previewUrl === 'string') {
-              let type: MediaType;
-              if (value.type.startsWith('image/')) {
-                type = MediaType.Image;
-              } else if (value.type.startsWith('video/')) {
-                type = MediaType.Video;
-              } else {
-                type = MediaType.Unknown;
-              }
+        if (typeof value === 'string') {
+          setMediaPreviewInfo({
+            type: MediaType.Image,
+            url: value,
+          });
+        } else {
+          const reader = new FileReader();
+          reader.addEventListener(
+            'load',
+            ({ target }) => {
+              const previewUrl = target?.result;
+              if (typeof previewUrl === 'string') {
+                let type: MediaType;
+                if (value.type.startsWith('image/')) {
+                  type = MediaType.Image;
+                } else if (value.type.startsWith('video/')) {
+                  type = MediaType.Video;
+                } else {
+                  type = MediaType.Unknown;
+                }
 
-              setMediaPreviewInfo({
-                type,
-                url: previewUrl,
-              });
-            } else {
-              throw new Error('Received non string result from file reader');
-            }
-          },
-        );
-        reader.readAsDataURL(value);
+                setMediaPreviewInfo({
+                  type,
+                  url: previewUrl,
+                });
+              } else {
+                throw new Error('Received non string result from file reader');
+              }
+            },
+          );
+          reader.readAsDataURL(value);
+        }
       } else {
         setMediaPreviewInfo(undefined);
       }
@@ -104,7 +113,7 @@ export const MediaInput: React.FC<MediaInputProps> = ({
               <button
                 type="button"
                 className={s.trash}
-                onClick={() => onChange(undefined)}
+                onClick={() => !disabled && onChange(undefined)}
               >
                 <Trash className={s.trashIcon} />
               </button>
@@ -137,7 +146,7 @@ export const MediaInput: React.FC<MediaInputProps> = ({
             <p className={s.description}>PNG, GIF, WEBP, MP4 or MP3. Max 30mb.</p>
             <Button
               className={s.button}
-              onClick={() => inputRef.current?.click()}
+              onClick={() => !disabled && inputRef.current?.click()}
             >
               Choose file
             </Button>
@@ -149,6 +158,7 @@ export const MediaInput: React.FC<MediaInputProps> = ({
           type="file"
           onChange={onInputChange}
           accept="image/*,video/*"
+          disabled={disabled}
           {...inputProps}
         />
       </div>

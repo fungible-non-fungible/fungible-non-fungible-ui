@@ -122,6 +122,7 @@ export const NftCard: React.FC<MarketplaceCardProps> = ({
           >
             {title}
           </Shiitake>
+          <span className={s.symbol}>{symbol || 'FNFT'}</span>
           <Shiitake
             lines={2}
             throttleRate={200}
@@ -136,6 +137,7 @@ export const NftCard: React.FC<MarketplaceCardProps> = ({
           <h3 className={s.title}>
             {title}
           </h3>
+          <span className={s.symbol}>{symbol}</span>
           <p className={s.description}>
             {description}
           </p>
@@ -150,7 +152,7 @@ export const NftCard: React.FC<MarketplaceCardProps> = ({
         <span className={s.price}>
           {price}
           {' '}
-          {symbol || 'BNB'}
+          BNB
         </span>
         {slug ? (
           <Button

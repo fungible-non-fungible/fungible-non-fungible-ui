@@ -76,3 +76,18 @@
 .success
   .label
     border: 2px dashed $solid-green
+
+.disabled
+  cursor: not-allowed
+  .trash
+    cursor: not-allowed
+    box-shadow: none
+    background: $primary-60
+  .trashIcon
+    opacity: .6
+  .label
+    border: 2px dashed rgba($light, .6)
+  .labelText
+    color: rgba($light, .6)
+  img
+    opacity: .6

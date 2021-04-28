@@ -11,7 +11,7 @@ export const convertFromNumberToPercent = (value: number, fullValue: number) => 
 );
 
 export const convertToCrypto = (value: number | BigNumber) => {
-  if (new BigNumber(value).eq(new BigNumber(0))) {
+  if (new BigNumber(value).lt(new BigNumber(0))) {
     return 0;
   }
   return (

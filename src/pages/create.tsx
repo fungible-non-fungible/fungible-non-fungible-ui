@@ -13,7 +13,7 @@ import {
   getIn,
 } from 'final-form';
 import { useWallet } from 'use-wallet';
-import { BigNumber as EthersBigNumber } from 'ethers';
+import { utils, BigNumber as EthersBigNumber } from 'ethers';
 import focusDecorator from 'final-form-focus';
 
 import { zeroAddress } from '@utils/defaults';
@@ -32,6 +32,7 @@ import { useWalletProvider } from '@utils/wallet';
 import useMarketplaceContract from '@contracts/useMarketplaceContract';
 import { makeContracts } from '@contracts/useContracts';
 import externalNFTAbi from '@contracts/abi/ExternalNFT.json';
+import { WalletConnect } from '@containers/WalletConnect';
 import { BaseLayout } from '@layouts/BaseLayout';
 import { Container } from '@components/ui/Container';
 import { Row } from '@components/ui/Row';
@@ -49,7 +50,7 @@ import { NftCard } from '@components/common/NftCard';
 import s from '@styles/Create.module.sass';
 
 const findInput = (inputs: any, errors: any) => inputs.find((input: any) => {
-  const name = input.name || input.id; // <------------ THERE
+  const name = input.name || input.id;
   return name && getIn(errors, name);
 });
 
@@ -61,6 +62,8 @@ const tabs = [
 ];
 
 type FormValues = {
+  nftAddress: string
+  nftId: number
   asset: any
   name: string
   description: string
@@ -69,6 +72,12 @@ type FormValues = {
   liquidityAmount: number
   burnPercent: number
 };
+
+enum ModalStatuses {
+  Default,
+  Error,
+  Pending,
+}
 
 const CreatePage: React.FC = () => {
   const { t } = useTranslation(['common', 'creating']);
@@ -79,22 +88,30 @@ const CreatePage: React.FC = () => {
   // States
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const [customSymbol, setCustomSymbol] = useState(false);
-  const [pendingMessage, setPendingMessage] = useState<string>();
+  const [modalState, setModalState] = useState<{
+    status: ModalStatuses,
+    message: string | null
+  }>({
+    status: ModalStatuses.Default,
+    message: null,
+  });
   const [showFullTokenizeForm, setShowFullTokenizeForm] = useState(false);
 
   const { Form } = withTypes<FormValues>();
 
-  const onSubmit = useCallback(async (
+  const onCreateAndTokenize = useCallback(async (
     values: FormValues,
     form: FormApi<FormValues>,
   ) => {
-    console.log('form', form);
-    if (!marketplaceContract || pendingMessage) {
+    if (!marketplaceContract || modalState.status !== ModalStatuses.Default) {
       return;
     }
     try {
       // Load file to ipfs and format it
-      setPendingMessage('Loading asset to IPFS');
+      setModalState({
+        status: ModalStatuses.Pending,
+        message: 'Loading asset to IPFS',
+      });
       const fileName = formatName(values.asset.name);
       const ipfsFile = await ipfs.add({
         path: fileName,
@@ -106,7 +123,10 @@ const CreatePage: React.FC = () => {
       const ipfsFileUrl = `ipfs://${ipfsFile.cid.string}/${fileName}`;
 
       // Load json to ipfs and format it
-      setPendingMessage('Loading NFT JSON to IPFS');
+      setModalState({
+        status: ModalStatuses.Pending,
+        message: 'Loading NFT JSON to IPFS',
+      });
       const nftData = {
         name: values.name,
         description: values.description,
@@ -124,7 +144,11 @@ const CreatePage: React.FC = () => {
       const ipfsJsonUrl = `ipfs://${json.cid.string}/${jsonPath}`;
 
       // Creating NFT
-      setPendingMessage('Creating NFT');
+      setModalState({
+        status: ModalStatuses.Pending,
+        message: 'Creating NFT',
+      });
+
       const resultOfCreation = marketplaceContract
         .createNFT(
           ipfsJsonUrl,
@@ -139,7 +163,7 @@ const CreatePage: React.FC = () => {
           values.symbol,
           {
             from: account,
-            gasLimit: 30000000,
+            gasLimit: 5_000_000,
             value: EthersBigNumber.from(
               convertUnits(
                 new BigNumber(+values.liquidityAmount + 0.07),
@@ -152,34 +176,141 @@ const CreatePage: React.FC = () => {
       if (!resultOfCreation) {
         throw new Error('Something went wrong when creating NFT');
       }
-    } catch (e) {
-      alert(`Error: ${e}`);
-    } finally {
-      setPendingMessage(undefined);
-    }
-  }, [account, marketplaceContract, pendingMessage]);
 
-  const loadNftInfo = useCallback(async (address: string, id: number) => {
-    if (!address || !id || !provider) {
+      setModalState({
+        status: ModalStatuses.Default,
+        message: null,
+      });
+
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval
+      setTimeout(form.restart);
+    } catch (e) {
+      setModalState({
+        status: ModalStatuses.Error,
+        message: `${e}`,
+      });
+    }
+  }, [account, marketplaceContract, modalState.status]);
+
+  const loadNftInfo = useCallback(async (
+    address: string,
+    id: number,
+    callback: (name: string, description: string, symbol: string, image: string) => void,
+  ) => {
+    if (!address || !id || !provider || modalState.status !== ModalStatuses.Default) {
       return;
     }
 
-    const contracts = makeContracts(
-      {
-        addresses: ['0xdf7952b35f24acf7fc0487d01c8d5690a60dba07'],
-        abi: externalNFTAbi,
-      },
-      provider,
-    );
+    try {
+      if (!utils.isAddress(address)) {
+        throw new Error('Provide a valid contract address.');
+      }
 
-    const resultOfInformation = await contracts[0]?.tokenURI(EthersBigNumber.from('1'));
-    const jsonResult = await fetch(`https://ipfs.infura.io:5001/api/v0/object/get?arg=${resultOfInformation.replace('ipfs://', '')}`);
-    console.log('jsonReslut', jsonResult);
-    const jsonResult2 = await fetch(`https://ipfs.io/ipfs/${resultOfInformation.replace('ipfs://', '')}`);
-    console.log('jsonReslut2', jsonResult2);
+      setModalState({
+        status: ModalStatuses.Pending,
+        message: 'Connecting to contract',
+      });
+      const contracts = makeContracts(
+        {
+          addresses: [address], // 0xdf7952b35f24acf7fc0487d01c8d5690a60dba07
+          abi: externalNFTAbi,
+        },
+        provider,
+      );
 
-    setShowFullTokenizeForm(true);
-  }, [provider]);
+      setModalState({
+        status: ModalStatuses.Pending,
+        message: 'Getting token URI by id',
+      });
+      const contractStorage = await contracts[0]?.tokenURI(EthersBigNumber.from(+id));
+      const symbol = await contracts[0]?.symbol();
+
+      setModalState({
+        status: ModalStatuses.Pending,
+        message: 'Fetching token metadata from IPFS',
+      });
+      const ipfsJson = await fetch(contractStorage.replace('ipfs://', 'https://ipfs.io/ipfs/'));
+      const parsedJson = await ipfsJson.json();
+      callback(
+        parsedJson.name,
+        parsedJson.description,
+        symbol,
+        parsedJson.image.replace('ipfs://', 'https://ipfs.io/ipfs/'),
+      );
+
+      setShowFullTokenizeForm(true);
+
+      setModalState({
+        status: ModalStatuses.Default,
+        message: null,
+      });
+    } catch (e) {
+      setModalState({
+        status: ModalStatuses.Error,
+        message: `${e}`,
+      });
+    }
+  }, [modalState.status, provider]);
+
+  const onTokenize = useCallback(async (
+    values: FormValues,
+    form: FormApi<FormValues>,
+  ) => {
+    if (!marketplaceContract || modalState.status !== ModalStatuses.Default) {
+      return;
+    }
+    try {
+      // Creating NFT
+      setModalState({
+        status: ModalStatuses.Pending,
+        message: 'Tokenizing NFT',
+      });
+      const resultOfCreation = marketplaceContract
+        .mint(
+          values.nftAddress,
+          EthersBigNumber.from(values.nftId),
+          EthersBigNumber.from(values.totalSupply.toString()),
+          values.symbol,
+          EthersBigNumber.from(
+            convertUnits(
+              new BigNumber(values.totalSupply)
+                .multipliedBy(new BigNumber(values.burnPercent).div(new BigNumber(100))),
+              -8,
+            ).toString(),
+          ),
+          true,
+          {
+            from: account,
+            gasLimit: 5_000_000,
+            value: EthersBigNumber.from(
+              convertUnits(
+                new BigNumber(+values.liquidityAmount + 0.05),
+                -18,
+              )
+                .toString(),
+            ),
+          },
+        );
+      if (!resultOfCreation) {
+        throw new Error('Something went wrong when creating NFT');
+      }
+
+      setModalState({
+        status: ModalStatuses.Default,
+        message: null,
+      });
+
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-implied-eval
+      setTimeout(form.restart);
+    } catch (e) {
+      setModalState({
+        status: ModalStatuses.Error,
+        message: `${e}`,
+      });
+    }
+  }, [account, marketplaceContract, modalState.status]);
 
   return (
     <BaseLayout>
@@ -205,25 +336,13 @@ const CreatePage: React.FC = () => {
             onChangeTab={(tab) => setSelectedTab(tab)}
           />
           <Form
-            onSubmit={onSubmit}
+            onSubmit={selectedTab === tabs[0] ? onCreateAndTokenize : onTokenize}
             // @ts-ignore
             decorators={[focusOnError]}
             initialValues={{ symbol: 'FNFT', burnPercent: 50 }}
             mutators={{
-              setBurnPercent: ([value], state, utils) => {
-                utils.changeValue(state, 'burnPercent', () => value);
-              },
-              setAsset: ([value], state, utils) => {
-                utils.changeValue(state, 'asset', () => value);
-              },
-              setName: ([value], state, utils) => {
-                utils.changeValue(state, 'name', () => value);
-              },
-              setDescription: ([value], state, utils) => {
-                utils.changeValue(state, 'description', () => value);
-              },
-              setSymbol: ([value], state, utils) => {
-                utils.changeValue(state, 'symbol', () => value);
+              setInputValue: ([name, value], state, formUtils) => {
+                formUtils.changeValue(state, name, () => value);
               },
             }}
             render={({
@@ -233,32 +352,71 @@ const CreatePage: React.FC = () => {
                 <form className={s.form} onSubmit={handleSubmit}>
                   {selectedTab === tabs[1] && (
                   <>
-                    <Input
-                      type="text"
-                      className={s.input}
-                      label="NFT address"
-                      placeholder="0x00...000"
-                    />
-                    <Input
-                      type="text"
-                      className={s.input}
-                      label="NFT id"
-                      placeholder="2"
-                    />
-                    {!showFullTokenizeForm && (
+                    {!showFullTokenizeForm ? (
+                      <>
+                        <Field name="nftAddress">
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              className={s.input}
+                              label="NFT address"
+                              placeholder="0x00...000"
+                              error={(meta.touched && meta.error) || meta.submitError}
+                              success={!meta.error && meta.touched && !meta.submitError}
+                            />
+                          )}
+                        </Field>
+                        <Field name="nftId">
+                          {({ input, meta }) => (
+                            <Input
+                              {...input}
+                              className={s.input}
+                              label="NFT id"
+                              placeholder="2"
+                              error={(meta.touched && meta.error) || meta.submitError}
+                              success={!meta.error && meta.touched && !meta.submitError}
+                            />
+                          )}
+                        </Field>
+                        <Button
+                          theme="orange"
+                          className={s.button}
+                          onClick={() => loadNftInfo(
+                            values.nftAddress,
+                            values.nftId,
+                            (name, description, symbol, image) => {
+                              form.mutators.setInputValue('name', name);
+                              form.mutators.setInputValue('description', description);
+                              form.mutators.setInputValue('symbol', symbol);
+                              form.mutators.setInputValue('asset', image);
+                            },
+                          )}
+                        >
+                          Load NFT&apos;s info
+                        </Button>
+                      </>
+                    ) : (
                       <Button
-                        theme="orange"
-                        className={s.button}
-                        onClick={() => loadNftInfo('123', 1)}
+                        theme="pink"
+                        className={s.buttonReload}
+                        onClick={() => {
+                          form.mutators.setInputValue('nftAddress', '');
+                          form.mutators.setInputValue('nftId', '');
+                          form.mutators.setInputValue('name', '');
+                          form.mutators.setInputValue('description', '');
+                          form.mutators.setInputValue('symbol', 'FNFT');
+                          form.mutators.setInputValue('asset', '');
+                          setShowFullTokenizeForm(false);
+                        }}
                       >
-                        Load NFT&apos;s info
+                        Reload NFT&apos;s info
                       </Button>
                     )}
                   </>
                   )}
                   {(selectedTab === tabs[0] || showFullTokenizeForm) && (
                   <>
-                    <Field<File>
+                    <Field<File | string>
                       name="asset"
                     >
                       {({ input: { value, onChange, ...input }, meta }) => (
@@ -283,7 +441,6 @@ const CreatePage: React.FC = () => {
                       {({ input, meta }) => (
                         <Input
                           {...input}
-                          type="text"
                           className={s.input}
                           label="Name"
                           placeholder="e.g. My Awesome NFT"
@@ -329,7 +486,6 @@ const CreatePage: React.FC = () => {
                         {({ input, meta }) => (
                           <Input
                             {...input}
-                            type="text"
                             label={selectedTab === tabs[0] ? 'Custom token symbol' : 'Token symbol'}
                             placeholder="FNFT"
                             disabled={!customSymbol || selectedTab === tabs[1]}
@@ -362,7 +518,6 @@ const CreatePage: React.FC = () => {
                         {({ input, meta }) => (
                           <Input
                             {...input}
-                            type="text"
                             label="Total supply"
                             placeholder="1200329"
                             currency={values.symbol || 'FNFT'}
@@ -386,7 +541,6 @@ const CreatePage: React.FC = () => {
                       {({ input, meta }) => (
                         <Input
                           {...input}
-                          type="text"
                           label="Liquidity amount"
                           placeholder="1200329"
                           currency="BNB"
@@ -413,7 +567,6 @@ const CreatePage: React.FC = () => {
                               className={cx(s.sliderInput, s.inputPercent)}
                               sizeT="small"
                               theme="green"
-                              type="number"
                               value={(+input.value).toFixed(2)}
                               currency="%"
                               error={(meta.touched && meta.error) || meta.submitError}
@@ -429,13 +582,13 @@ const CreatePage: React.FC = () => {
                           className={s.sliderInput}
                           sizeT="small"
                           theme="orange"
-                          type="number"
                           value={convertFromPercentToNumber(
                             values.burnPercent,
                             +values.totalSupply || 0,
                           ).toFixed(2)}
                           onChange={
-                            (e) => form.mutators.setBurnPercent(
+                            (e) => form.mutators.setInputValue(
+                              'burnPercent',
                               convertFromNumberToPercent(
                                 +e.target.value,
                                 +values.totalSupply || 0,
@@ -451,15 +604,22 @@ const CreatePage: React.FC = () => {
                       maxValue={90}
                       inputValue={values.burnPercent}
                       className={cx(s.input, s.slider)}
-                      onDragEnd={(value) => form.mutators.setBurnPercent(value.toFixed(2))}
+                      onDragEnd={(value) => form.mutators.setInputValue('burnPercent', value.toFixed(2))}
                     />
-                    <Button
-                      type="submit"
-                      className={s.button}
-                      disabled={submitting}
-                    >
-                      Create
-                    </Button>
+                    {account ? (
+                      <Button
+                        type="submit"
+                        className={s.button}
+                        disabled={submitting}
+                      >
+                        Create
+                      </Button>
+                    ) : (
+                      <WalletConnect
+                        theme="orange"
+                        className={s.button}
+                      />
+                    )}
                   </>
                   )}
                 </form>
@@ -468,12 +628,13 @@ const CreatePage: React.FC = () => {
                   title={
                     (selectedTab === tabs[0] || showFullTokenizeForm) && values.name
                       ? values.name
-                      : 'Print NFT\'s name'
+                      : 'Type NFT\'s name...'
                   }
+                  symbol={values.symbol || 'FNFT'}
                   description={
                     (selectedTab === tabs[0] || showFullTokenizeForm) && values.description
                       ? values.description
-                      : 'Print NFT\'s description'
+                      : 'Type NFT\'s description...'
                   }
                   className={s.card}
                   author={{
@@ -497,11 +658,38 @@ const CreatePage: React.FC = () => {
           />
         </Row>
       </Container>
-      <Modal isOpen={!!pendingMessage} innerClassName={s.modal}>
-        <Loader className={s.loader} />
+      <Modal
+        isOpen={modalState.status !== ModalStatuses.Default}
+        onRequestClose={
+          () => modalState.status === ModalStatuses.Error
+            && setModalState({
+              status: ModalStatuses.Default,
+              message: null,
+            })
+        }
+        innerClassName={s.modal}
+      >
+        {modalState.status === ModalStatuses.Pending && (
+          <Loader className={s.loader} />
+        )}
+        {modalState.status === ModalStatuses.Error && (
+          <span className={s.errorHeader}>Ooops... Error!</span>
+        )}
         <div className={s.modalMessage}>
-          {pendingMessage}
+          {modalState.message}
         </div>
+        {modalState.status === ModalStatuses.Error && (
+          <Button
+            className={s.errorButton}
+            theme="orange"
+            onClick={() => setModalState({
+              status: ModalStatuses.Default,
+              message: null,
+            })}
+          >
+            Try once more
+          </Button>
+        )}
       </Modal>
     </BaseLayout>
   );
