@@ -8,7 +8,6 @@ import { UseWalletProvider } from 'use-wallet';
 
 import { chainId, walletConnectors } from '@utils/defaults';
 import { DEFAULT_SEO } from '@utils/default-seo.config';
-import { WalletReconnect } from '@containers/WalletReconnect';
 
 import '@styles/globals.sass';
 
@@ -130,7 +129,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Head>
       <Component {...pageProps} />
-      <WalletReconnect />
     </UseWalletProvider>
   );
 }

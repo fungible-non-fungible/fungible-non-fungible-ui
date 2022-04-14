@@ -54,7 +54,7 @@ export const HolderCard: React.FC<HolderCardProps> = ({
 
 type HoldersProgressProps = {
   className?: string
-  holders: HolderProps[]
+  holders?: HolderProps[]
   burnPercent: number
 };
 
@@ -72,13 +72,13 @@ export const HoldersProgress: React.FC<HoldersProgressProps> = ({
         {burnPercent}
         %
       </div>
-      {holders.slice(0, 3).map((holder, index) => (
+      {holders?.slice(0, 3).map((holder, index) => (
         <HolderCard
           key={holder.accountPkh}
           accountPkh={holder.accountPkh}
           image={holder.image}
           percent={holder.percent}
-          zIndex={holders.length - index + 2}
+          zIndex={holders?.slice(0, 3).length - index + 2}
         />
       ))}
     </div>

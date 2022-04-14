@@ -34,16 +34,16 @@
   overflow: hidden
   position: absolute
   top: calc(100%)
-  left: 100%
-  transition: opacity $animationTime / 2, z-index $animationTime / 2 $animationTime / 2
+  right: 0
   z-index: -2
+  transition: opacity $animationTime / 2, transform 0s $animationTime / 2
   opacity: 0
+  transform: translateY(calc(-100% - 200px))
   &.opened
-    right: 0
-    left: auto
     opacity: 1
     z-index: 2
-    transition: opacity $animationTime / 2 $animationTime / 2, z-index $animationTime / 2
+    transition: opacity $animationTime / 2, transform 0s
+    transform: translateY(0)
 
 .window
   background-color: $primary-80

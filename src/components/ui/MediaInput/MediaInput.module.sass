@@ -1,0 +1,93 @@
+@import "@styles/variables"
+
+.root
+  width: 100%
+  display: flex
+  flex-direction: column
+
+.label
+  width: 100%
+  display: flex
+  flex-direction: column
+  align-items: center
+  border: 2px dashed $light
+  padding: 32px
+  border-radius: 20px
+  color: rgba($light, .5)
+  font-weight: bold
+  position: relative
+
+.labelText
+  font-weight: bold
+  margin-bottom: 20px
+  font-size: 20px
+
+.input
+  display: none
+
+.fileWrapper
+  position: relative
+
+.trash
+  border-radius: 50%
+  background: $gradient-orange
+  display: flex
+  justify-content: center
+  align-items: center
+  z-index: 2
+  position: absolute
+  top: 37px
+  right: 37px
+  width: 54px
+  height: 54px
+  box-shadow: 0 5px 15px rgba(#EBCD72, 0.4)
+
+.trashIcon
+  width: 32px
+  height: auto
+  margin-left: 5px
+
+.imagePreview,
+.videoPreview
+  max-width: 100%
+  max-height: 300px
+
+.button
+  margin-top: 20px
+
+
+.errorContainer
+  max-height: 0
+  overflow: hidden
+  transition: max-height $animationTime
+.error
+  .label
+    border: 2px dashed #AF2A2A
+.errorText
+  padding-top: 10px
+  font-size: 1rem
+  color: #F76F6F
+  line-height: 0.941rem
+  font-weight: 400
+.error
+  .errorContainer
+    max-height: 30px
+
+.success
+  .label
+    border: 2px dashed $solid-green
+
+.disabled
+  cursor: not-allowed
+  .trash
+    cursor: not-allowed
+    box-shadow: none
+    background: $primary-60
+  .trashIcon
+    opacity: .6
+  .label
+    border: 2px dashed rgba($light, .6)
+  .labelText
+    color: rgba($light, .6)
+  img
+    opacity: .6

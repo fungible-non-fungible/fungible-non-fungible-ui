@@ -18,7 +18,10 @@ import { Switcher } from '@components/ui/Switcher';
 import { Slider } from '@components/ui/Slider';
 import { Tabs } from '@components/ui/Tabs';
 import { Input } from '@components/ui/Input';
+import { MediaInput } from '@components/ui/MediaInput';
 import { SocialButton } from '@components/ui/SocialButton';
+import { Loader } from '@components/ui/Loader';
+import { Modal } from '@components/ui/Modal';
 import { NftCard } from '@components/common/NftCard';
 import Twitter from '@icons/socials/Twitter.svg';
 import Facebook from '@icons/socials/Facebook.svg';
@@ -45,6 +48,8 @@ const Home: React.FC = () => {
   const [switcherState, setSwitcherState] = useState(false);
   const [sliderValue, setSliderValue] = useState(50);
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
+  const [openedModal, setOpenedModal] = useState(false);
+  const [mediaInput, setMediaInput] = useState<File>();
 
   return (
     <BaseLayout>
@@ -363,6 +368,20 @@ const Home: React.FC = () => {
               placeholder="12.345"
               textarea
             />
+            <MediaInput
+              className={s.input}
+              label="Upload file"
+              value={mediaInput}
+              onChange={(value) => setMediaInput(value)}
+            />
+          </div>
+          <div className={s.block}>
+            <Heading title="Loader" />
+            <Loader />
+          </div>
+          <div className={s.block}>
+            <Heading title="Modal" />
+            <Button onClick={() => setOpenedModal(true)}>Open modal</Button>
           </div>
           <div className={s.block}>
             <Heading title="Cards" />
@@ -384,6 +403,11 @@ const Home: React.FC = () => {
           </div>
         </Row>
       </Container>
+      <Modal
+        isOpen={openedModal}
+      >
+        Test
+      </Modal>
     </BaseLayout>
   );
 };
